@@ -1,0 +1,39 @@
+﻿body {
+    background-color: white;
+}
+
+/* header */
+.dropdown-item:hover {
+    background-color: #cf2e2e !important;
+    color: white !important;
+}
+
+
+/* filter section */
+.search-box {
+    background: #333;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.btn-search {
+    background: red;
+    border: none;
+    width: 100%;
+}
+
+.text_white {
+    color: white !important;
+}
+
+.hov:hover {
+    background-color: gray;
+}
+
+.mt-75p {
+    margin-top: 75px;
+}
+

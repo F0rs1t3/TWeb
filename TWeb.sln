@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TWeb", "TWeb\TWeb.csproj", "{0D957A34-57BC-4D93-8F58-1C5CB71A3CA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{AF88E8A6-5956-404E-B43D-63D02BFD9763}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{9AE8988B-28FE-4A18-B1CC-1C2C4397C159}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D957A34-57BC-4D93-8F58-1C5CB71A3CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D957A34-57BC-4D93-8F58-1C5CB71A3CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D957A34-57BC-4D93-8F58-1C5CB71A3CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D957A34-57BC-4D93-8F58-1C5CB71A3CA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF88E8A6-5956-404E-B43D-63D02BFD9763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF88E8A6-5956-404E-B43D-63D02BFD9763}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF88E8A6-5956-404E-B43D-63D02BFD9763}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF88E8A6-5956-404E-B43D-63D02BFD9763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AE8988B-28FE-4A18-B1CC-1C2C4397C159}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AE8988B-28FE-4A18-B1CC-1C2C4397C159}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AE8988B-28FE-4A18-B1CC-1C2C4397C159}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AE8988B-28FE-4A18-B1CC-1C2C4397C159}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A9829F1B-3352-4AC4-8D99-B66B3A4C9D61}
+	EndGlobalSection
+EndGlobal
