@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="register-page">
+    <div class="auth-container">
+        <form class="auth-form" method="post" action="/register">
+            <h2>Create Account</h2>
+
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirm your password" required>
+
+            <button type="submit">Register</button>
+
+            <p class="register-link">Already have an account? <a href="/authorization">Login</a></p>
+        </form>
+    </div>
+</div>
