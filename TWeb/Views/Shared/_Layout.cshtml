@@ -42,8 +42,37 @@
 
         <!-- Main Content -->
         <div class="main-content">
+
             <!-- Top Bar -->
-            <header class="topbar">
+            <header class="topbar" style="display: flex; align-items: center; justify-content: space-between; height: 60px; background-color: #ffffff; border-bottom: 1px solid #dddddd; padding: 0 20px;">
+                <div class="topbar-left" style="display: flex; align-items: center; flex: 1; min-width: 0;">
+                    <div class="filters-bar" style="display: flex; align-items: center; gap: 12px;">
+                        <div class="dropdown-group" style="display: flex; gap: 12px;">
+                            <div class="filter-wrapper" style="position: relative;">
+                                <i class="fas fa-th icon-left" style="position: absolute; top: 50%; left: 12px; transform: translateY(-50%); font-size: 14px; color: #aaa; pointer-events: none;"style="position: absolute; top: 50%; left: 12px; transform: translateY(-50%); font-size: 14px; color: #aaa; pointer-events: none;"></i>
+                                <select class="form-select filter-select" aria-label="Category" style="padding: 10px 14px 10px 40px; font-size: 15px; color: #333; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; appearance: none; background-image: none; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); transition: border-color 0.2s ease-in-out; min-width: 200px;">
+                                    <option selected>Select Category</option>
+                                    <option value="1">SUV</option>
+                                    <option value="2">Sedan</option>
+                                    <option value="3">Truck</option>
+                                    <option value="4">Coupe</option>
+                                </select>
+                            </div>
+                            <div class="filter-wrapper" style="position: relative;">
+                                <i class="fas fa-filter icon-left" style="position: absolute; top: 50%; left: 12px; transform: translateY(-50%); font-size: 14px; color: #aaa; pointer-events: none;"></i>
+                                <select class="form-select filter-select" aria-label="Sort" style="padding: 10px 14px 10px 40px; font-size: 15px; color: #333; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; appearance: none; background-image: none; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); transition: border-color 0.2s ease-in-out; min-width: 200px;">
+                                    <option selected>Sort by</option>
+                                    <option value="price_asc">Price: Low to High</option>
+                                    <option value="price_desc">Price: High to Low</option>
+                                    <option value="year_desc">Newest</option>
+                                    <option value="year_asc">Oldest</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topbar-right" style="display: flex; align-items: center; gap: 20px; flex-shrink: 0;">
                 <div class="auth">
                     @{
                         var controller = ViewContext.RouteData.Values["controller"]?.ToString();
@@ -53,16 +82,14 @@
                     @if (!(controller == "Authorization" && (action == "Index" || action == "Register")))
                     {
                         <a href="/authorization">
-                            <button class="headbutton" style="margin-right:20px">Sign in</button>
+                                <button class="headbutton">Sign in</button>
                         </a>
                     }
-
-                    @* <div>Login</div> *@
-                    @* <div class="sub">Register</div> *@
                 </div>
                 <div class="actions">
-                    <button class="headbutton">+ Create</button>
-                    <i class="fas fa-user-circle profile-icon"></i>
+                        <button class="headbutton" href="/addcar">Add Car</button>
+                        <a href="/profile"><i class="fas fa-user-circle profile-icon"></i></a>
+                </div>
                 </div>
             </header>
 

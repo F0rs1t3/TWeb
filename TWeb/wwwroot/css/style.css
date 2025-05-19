@@ -66,9 +66,23 @@
     background-color: #fff;
     border-bottom: 1px solid #ddd;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     padding: 0 20px;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
 }
 
 .auth {
@@ -115,4 +129,59 @@
 
 .name:hover {
     --bs-link-color-rgb: var(--bs-link-hover-color-rgb);
+}
+
+.filters-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 25px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.dropdown-group {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-select {
+    position: relative;
+    min-width: 200px;
+    padding: 10px 14px 10px 40px;
+    font-size: 15px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    appearance: none;
+    background-image: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.2s ease-in-out;
+}
+
+    .filter-select:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+    .filter-select::before {
+        content: "";
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+.filter-wrapper {
+    position: relative;
+}
+
+.icon-left {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #aaa;
+    pointer-events: none;
 }
