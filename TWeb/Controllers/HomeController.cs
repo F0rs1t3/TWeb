@@ -1,24 +1,24 @@
 using System.Diagnostics;
+//using BusinessLogic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TWeb.Models;
 
 namespace TWeb.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+       : base(userManager)
     {
         _logger = logger;
     }
 
     public IActionResult Index()
     {
-        var carService = new CarService();
-        var brands = carService.GetAllCarBrands();
-
-        return View(brands); // Pass the list to the view
+        return View();
     }
 
 

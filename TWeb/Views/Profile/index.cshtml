@@ -6,15 +6,15 @@
     <div class="profile-header">
         <i class="fas fa-user-circle" style="font-size: 96px; color: #aaa; margin-right: 20px;"></i>
         <div class="user-info">
-            <h2>John Doe</h2>
-            <p>john.doe@example.com</p>
-            <button class="edit-button">Edit Profile</button>
+            <h2>@ViewBag.UserName ( @ViewBag.LastName @ViewBag.FirstName )</h2>
+            <p>@ViewBag.Email</p>
+            <a asp-action="Edit" class="edit-button btn btn-warning">Edit Profile</a>
         </div>
     </div>
 
     <div class="profile-tabs">
         <button class="tab active">My Listings</button>
-        <button class="tab">Account Settings</button>
+        @* <button class="tab">Account Settings</button> *@
     </div>
 
     <div class="profile-content">
