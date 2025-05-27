@@ -5,6 +5,10 @@ namespace TWeb.Models.ViewModels
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "Username")]
+        public string UserName { get; set; } = string.Empty;
+
+        [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; } = string.Empty;
 
