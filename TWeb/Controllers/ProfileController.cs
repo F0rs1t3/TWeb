@@ -11,11 +11,14 @@ namespace TWeb.Controllers
     public class ProfileController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public ProfileController(UserManager<ApplicationUser> userManager)
+        public ProfileController(UserManager<ApplicationUser> userManager,
+                                 SignInManager<ApplicationUser> signInManager)
             : base(userManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -43,11 +46,22 @@ namespace TWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditProfileViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
 
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) return NotFound();
+            if (user == null)
+                return NotFound();
 
+            // Verify password
+            var passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!passwordValid)
+            {
+                ModelState.AddModelError("Password", "Incorrect password. Please try again.");
+                return View(model);
+            }
+
+            // Update user info
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
