@@ -53,7 +53,7 @@ namespace TWeb.Controllers
             if (user == null)
                 return NotFound();
 
-            // Verify password
+            // Step 1: Check current password
             var passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
             if (!passwordValid)
             {
@@ -61,25 +61,39 @@ namespace TWeb.Controllers
                 return View(model);
             }
 
-            // Update user info
+            // Step 2: Update profile fields
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
             user.UserName = model.UserName;
 
-            var result = await _userManager.UpdateAsync(user);
+            var profileUpdateResult = await _userManager.UpdateAsync(user);
 
-            if (result.Succeeded)
+            if (!profileUpdateResult.Succeeded)
             {
-                return RedirectToAction("Index");
+                foreach (var error in profileUpdateResult.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View(model);
             }
 
-            foreach (var error in result.Errors)
+            // Step 3: Handle password change if requested
+            if (!string.IsNullOrEmpty(model.NewPassword))
             {
-                ModelState.AddModelError("", error.Description);
+                var passwordChangeResult = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+                if (!passwordChangeResult.Succeeded)
+                {
+                    foreach (var error in passwordChangeResult.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View(model);
+                }
             }
 
-            return View(model);
+            return RedirectToAction("Index");
         }
+
     }
 }
