@@ -1,38 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using TWeb.Models;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 namespace TWeb.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public BaseController(UserManager<ApplicationUser> userManager)
+        public BaseController()
         {
-            _userManager = userManager;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        protected string GetCurrentUserId()
         {
-            base.OnActionExecuting(context);
+            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        }
 
-            if (User.Identity.IsAuthenticated)
-            {
-                var userTask = _userManager.GetUserAsync(User);
-                userTask.Wait(); // Wait here because OnActionExecuting is not async
-                var user = userTask.Result;
+        protected bool IsUserLoggedIn()
+        {
+            return User.Identity?.IsAuthenticated ?? false;
+        }
 
-                if (user != null)
-                {
-                    ViewBag.FirstName = user.FirstName;
-                    ViewBag.LastName = user.LastName;
-                    ViewBag.UserName = user.UserName;
-                    ViewBag.Email = user.Email;
-                }
-            }
+        protected string GetCurrentUserName()
+        {
+            return User.Identity?.Name ?? string.Empty;
         }
     }
 }

@@ -1,24 +1,40 @@
-﻿@{
+﻿@model TWeb.Models.ApplicationUser
+@{
     ViewData["Title"] = "Profile";
 }
 
-<div class="profile-page">
-    <div class="profile-header">
-        <i class="fas fa-user-circle" style="font-size: 96px; color: #aaa; margin-right: 20px;"></i>
-        <div class="user-info">
-            <h2>@ViewBag.UserName ( @ViewBag.LastName @ViewBag.FirstName )</h2>
-            <p>@ViewBag.Email</p>
-            <a asp-action="Edit" class="edit-button btn btn-warning">Edit Profile</a>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3>My Profile</h3>
+                    <a asp-controller="Car" asp-action="Create" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Add+
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Profile content -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>First Name:</strong> @Model.FirstName</p>
+                            <p><strong>Last Name:</strong> @Model.LastName</p>
+                            <p><strong>Email:</strong> @Model.Email</p>
+                            <p><strong>Username:</strong> @Model.UserName</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a asp-controller="Car" asp-action="MyCars" class="btn btn-primary">
+                            <i class="fas fa-car"></i> View My Cars
+                        </a>
+                        <a asp-action="Edit" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="profile-tabs">
-        <button class="tab active">My Listings</button>
-        @* <button class="tab">Account Settings</button> *@
-    </div>
-
-    <div class="profile-content">
-        <p>Here you can see your listings or account settings...</p>
     </div>
 </div>
 

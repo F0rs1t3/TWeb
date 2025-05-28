@@ -11,12 +11,28 @@ namespace TWeb.Data
         {
         }
 
+        public DbSet<Car> Cars { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
+            // Configure Car entity
+            builder.Entity<Car>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Brand).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Model).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.PhotoPath).HasMaxLength(500);
+                entity.Property(e => e.OwnerId).IsRequired();
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
+                
+                // Configure relationship
+                entity.HasOne(e => e.Owner)
+                      .WithMany()
+                      .HasForeignKey(e => e.OwnerId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }

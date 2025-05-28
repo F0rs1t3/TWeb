@@ -1,36 +1,42 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using TWeb.Models;
 using TWeb.Models.ViewModels;
 
 namespace TWeb.Controllers
 {
     [Authorize]
-    public class ProfileController : BaseController
+    public class ProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public ProfileController(UserManager<ApplicationUser> userManager,
-                                 SignInManager<ApplicationUser> signInManager)
-            : base(userManager)
+        public ProfileController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(); // Shows profile details
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) return NotFound();
+            if (user == null)
+            {
+                return NotFound();
+            }
 
             var model = new EditProfileViewModel
             {
@@ -44,56 +50,63 @@ namespace TWeb.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditProfileViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(model);
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return NotFound();
-
-            // Step 1: Check current password
-            var passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
-            if (!passwordValid)
             {
-                ModelState.AddModelError("Password", "Incorrect password. Please try again.");
                 return View(model);
             }
 
-            // Step 2: Update profile fields
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Verify current password
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!passwordCheck)
+            {
+                ModelState.AddModelError("Password", "Current password is incorrect.");
+                return View(model);
+            }
+
+            // Update user properties
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
             user.UserName = model.UserName;
 
-            var profileUpdateResult = await _userManager.UpdateAsync(user);
-
-            if (!profileUpdateResult.Succeeded)
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
             {
-                foreach (var error in profileUpdateResult.Errors)
+                foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
                 return View(model);
             }
 
-            // Step 3: Handle password change if requested
+            // Update password if provided
             if (!string.IsNullOrEmpty(model.NewPassword))
             {
-                var passwordChangeResult = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
-                if (!passwordChangeResult.Succeeded)
+                var passwordResult = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+                if (!passwordResult.Succeeded)
                 {
-                    foreach (var error in passwordChangeResult.Errors)
+                    foreach (var error in passwordResult.Errors)
                     {
-                        ModelState.AddModelError("", error.Description);
+                        ModelState.AddModelError(string.Empty, error.Description);
                     }
                     return View(model);
                 }
+
+                // Sign in again with new password
+                await _signInManager.RefreshSignInAsync(user);
             }
 
-            return RedirectToAction("Index");
+            TempData["SuccessMessage"] = "Profile updated successfully!";
+            return RedirectToAction(nameof(Index));
         }
-
     }
 }

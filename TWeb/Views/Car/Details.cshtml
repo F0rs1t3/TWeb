@@ -1,0 +1,109 @@
+@model TWeb.Models.Car
+@{
+    ViewData["Title"] = "Car Details";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3>@Model.Brand @Model.Model</h3>
+                    @if (User.Identity.IsAuthenticated && Model.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                    {
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+                    {
+                        <div class="text-center mb-4">
+                            <img src="@Model.PhotoPath" alt="@Model.Brand @Model.Model" class="img-fluid rounded" style="max-height: 400px;" />
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Car Information</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Brand:</strong></td>
+                                    <td>@Model.Brand</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Model:</strong></td>
+                                    <td>@Model.Model</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Year:</strong></td>
+                                    <td>@Model.Year</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mileage:</strong></td>
+                                    <td>@Model.Mileage.ToString("N0") KM</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Owner Information</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Owner:</strong></td>
+                                    <td>@Model.Owner.FirstName @Model.Owner.LastName</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td>@Model.Owner.Email</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Added:</strong></td>
+                                    <td>@Model.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-action="Index" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> Back to All Cars
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+@if (User.Identity.IsAuthenticated && Model.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+{
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this car: <strong>@Model.Brand @Model.Model</strong>?
+                    <br><small class="text-muted">This action cannot be undone.</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete Car
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,13 @@
+.navbar-brand img {
+    height: 40px;
+    width: auto;
+    transition: transform 0.2s ease-in-out;
+}
+
+.navbar-brand img:hover {
+    transform: scale(1.05);
+}
+
+.navbar-brand {
+    padding: 0.25rem 0;
+}
