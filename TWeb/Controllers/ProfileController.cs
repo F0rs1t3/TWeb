@@ -64,7 +64,6 @@ namespace TWeb.Controllers
                 return NotFound();
             }
 
-            // Verify current password
             var passwordCheck = await _userManager.CheckPasswordAsync(user, model.Password);
             if (!passwordCheck)
             {
@@ -72,7 +71,6 @@ namespace TWeb.Controllers
                 return View(model);
             }
 
-            // Update user properties
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
@@ -88,7 +86,7 @@ namespace TWeb.Controllers
                 return View(model);
             }
 
-            // Update password if provided
+
             if (!string.IsNullOrEmpty(model.NewPassword))
             {
                 var passwordResult = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
@@ -101,7 +99,6 @@ namespace TWeb.Controllers
                     return View(model);
                 }
 
-                // Sign in again with new password
                 await _signInManager.RefreshSignInAsync(user);
             }
 

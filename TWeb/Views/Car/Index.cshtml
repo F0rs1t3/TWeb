@@ -6,18 +6,20 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>All Cars</h2>
-        @if (User.Identity.IsAuthenticated)
+        @if (User.Identity!.IsAuthenticated)
         {
-            <div>
-                <a asp-action="Create" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Add Car
-                </a>
-                <a asp-action="MyCars" class="btn btn-primary">
-                    <i class="fas fa-car"></i> My Cars
-                </a>
-            </div>
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fas fa-plus"></i> Add New Car
+            </a>
         }
     </div>
+
+    @if (ViewBag.IsAdmin)
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-shield-alt"></i> Administrator View - You can manage all cars
+        </div>
+    }
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -27,7 +29,7 @@
         </div>
     }
 
-    @if (Model.Any())
+    @if (Model?.Any() == true)
     {
         <div class="row">
             @foreach (var car in Model)
@@ -49,13 +51,25 @@
                             <p class="card-text">
                                 <strong>Year:</strong> @car.Year<br>
                                 <strong>Mileage:</strong> @car.Mileage.ToString("N0") KM<br>
-                                <strong>Owner:</strong> @car.Owner.FirstName @car.Owner.LastName
+                                <strong>Owner:</strong> @car.Owner?.FirstName @car.Owner?.LastName<br>
+                                <strong>Added:</strong> @car.CreatedAt.ToString("MMM dd, yyyy")
                             </p>
                             <div class="mt-auto">
-                                <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-primary">View Details</a>
-                                @if (User.Identity.IsAuthenticated && car.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                                <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-primary btn-sm">View Details</a>
+                                
+                                @if (User.Identity!.IsAuthenticated && (car.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value || ViewBag.IsAdmin))
                                 {
-                                    <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-warning btn-sm mt-2">Edit</a>
+                                    <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-warning btn-sm">Edit</a>
+                                }
+                                
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    <form asp-action="Delete" asp-route-id="@car.Id" method="post" class="d-inline" 
+                                          onsubmit="return confirm('Are you sure you want to delete this car?')">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
                                 }
                             </div>
                         </div>
@@ -69,11 +83,11 @@
         <div class="text-center mt-5">
             <i class="fas fa-car fa-5x text-muted mb-3"></i>
             <h4>No cars available</h4>
-            <p class="text-muted">Be the first to add a car!</p>
-            @if (User.Identity.IsAuthenticated)
+            <p class="text-muted">No cars have been added yet.</p>
+            @if (User.Identity!.IsAuthenticated)
             {
                 <a asp-action="Create" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Add Your First Car
+                    <i class="fas fa-plus"></i> Add the First Car
                 </a>
             }
         </div>

@@ -20,11 +20,7 @@ namespace TWeb.Controllers
         public async Task<IActionResult> Index()
         {
             var cars = await _carService.GetAllCarsAsync();
-            Console.WriteLine($"Found {cars.Count} cars in database");
-            foreach (var car in cars)
-            {
-                Console.WriteLine($"Car: {car.Brand} {car.Model} - Owner: {car.OwnerId}");
-            }
+            ViewBag.IsAdmin = User.IsInRole("Administrator");
             return View(cars);
         }
 
@@ -32,9 +28,7 @@ namespace TWeb.Controllers
         public async Task<IActionResult> MyCars()
         {
             var userId = GetCurrentUserId();
-            Console.WriteLine($"Getting cars for user: {userId}");
             var cars = await _carService.GetCarsByOwnerAsync(userId);
-            Console.WriteLine($"Found {cars.Count} cars for this user");
             return View(cars);
         }
 
@@ -46,6 +40,9 @@ namespace TWeb.Controllers
             {
                 return NotFound();
             }
+            
+            ViewBag.IsOwner = car.OwnerId == GetCurrentUserId();
+            ViewBag.IsAdmin = User.IsInRole("Administrator");
             return View(car);
         }
 
@@ -64,7 +61,6 @@ namespace TWeb.Controllers
             if (ModelState.IsValid)
             {
                 var userId = GetCurrentUserId();
-                Console.WriteLine($"Creating car for user: {userId}");
                 
                 var car = new Car
                 {
@@ -75,8 +71,6 @@ namespace TWeb.Controllers
                     OwnerId = userId,
                     CreatedAt = DateTime.Now
                 };
-
-                // Handle photo upload
                 if (viewModel.Photo != null && viewModel.Photo.Length > 0)
                 {
                     var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "cars");
@@ -93,17 +87,9 @@ namespace TWeb.Controllers
                     car.PhotoPath = "/images/cars/" + uniqueFileName;
                 }
 
-                var savedCar = await _carService.AddCarAsync(car);
-                Console.WriteLine($"Car saved with ID: {savedCar.Id}");
-                
+                await _carService.AddCarAsync(car);
                 TempData["SuccessMessage"] = "Car added successfully!";
                 return RedirectToAction(nameof(Index));
-            }
-            
-            Console.WriteLine("ModelState is invalid:");
-            foreach (var error in ModelState)
-            {
-                Console.WriteLine($"{error.Key}: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
             }
             
             return View(viewModel);
@@ -119,7 +105,8 @@ namespace TWeb.Controllers
                 return NotFound();
             }
 
-            if (!await _carService.IsOwnerAsync(id, GetCurrentUserId()))
+            // Only owner or admin can edit
+            if (car.OwnerId != GetCurrentUserId() && !User.IsInRole("Administrator"))
             {
                 return Forbid();
             }
@@ -148,7 +135,8 @@ namespace TWeb.Controllers
                 return NotFound();
             }
 
-            if (!await _carService.IsOwnerAsync(id, GetCurrentUserId()))
+            // Only owner or admin can edit
+            if (car.OwnerId != GetCurrentUserId() && !User.IsInRole("Administrator"))
             {
                 return Forbid();
             }
@@ -208,7 +196,8 @@ namespace TWeb.Controllers
                 return NotFound();
             }
 
-            if (!await _carService.IsOwnerAsync(id, GetCurrentUserId()))
+            // Only owner or admin can delete
+            if (car.OwnerId != GetCurrentUserId() && !User.IsInRole("Administrator"))
             {
                 return Forbid();
             }
@@ -224,8 +213,24 @@ namespace TWeb.Controllers
             }
 
             await _carService.DeleteCarAsync(id);
-            TempData["SuccessMessage"] = "Car deleted successfully!";
-            return RedirectToAction(nameof(MyCars));
+            
+            if (User.IsInRole("Administrator"))
+            {
+                TempData["SuccessMessage"] = "Car deleted successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Car deleted successfully!";
+                return RedirectToAction(nameof(MyCars));
+            }
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> AdminPanel()
+        {
+            var cars = await _carService.GetAllCarsAsync();
+            return View(cars);
         }
     }
 }

@@ -81,7 +81,6 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
 @if (User.Identity.IsAuthenticated && Model.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
 {
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

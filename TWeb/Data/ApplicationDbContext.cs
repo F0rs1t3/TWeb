@@ -17,7 +17,6 @@ namespace TWeb.Data
         {
             base.OnModelCreating(builder);
             
-            // Configure Car entity
             builder.Entity<Car>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -27,7 +26,6 @@ namespace TWeb.Data
                 entity.Property(e => e.OwnerId).IsRequired();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
                 
-                // Configure relationship
                 entity.HasOne(e => e.Owner)
                       .WithMany()
                       .HasForeignKey(e => e.OwnerId)

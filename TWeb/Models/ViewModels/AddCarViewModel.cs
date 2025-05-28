@@ -5,7 +5,7 @@ namespace TWeb.Models.ViewModels
     public class AddCarViewModel
     {
         [Required(ErrorMessage = "Car brand is required")]
-        [Display(Name = "Car Brand (Marca)")]
+        [Display(Name = "Car Brand")]
         [StringLength(100)]
         public string Brand { get; set; } = string.Empty;
 
