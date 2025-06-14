@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Welcome to CarLux</h1>
+        <p class="lead mb-4">Your personal car management system</p>
+        
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="d-flex justify-content-center gap-3">
+                <a href="@Url.Action("Create", "Cars")" class="btn btn-primary btn-lg">
+                    Add Your Car
+                </a>
+                <a href="@Url.Action("MyListings", "Cars")" class="btn btn-outline-light btn-lg">
+                    My Car Listings
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center gap-3">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">
+                    Get Started
+                </a>
+                <a asp-controller="Car" asp-action="Index" class="btn btn-outline-light btn-lg">
+                    Browse Cars
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Your Fleet</h5>
+                    <p class="card-text">Keep track of all your vehicles in one place.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Community Driven</h5>
+                    <p class="card-text">Connect with other car enthusiasts.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Secure & Private</h5>
+                    <p class="card-text">Your data is safe with us.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @if (User.Identity?.IsAuthenticated != true)
+    {
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body text-center py-5">
+                        <h3 class="mb-3">Ready to get started?</h3>
+                        <p class="lead mb-4">Join thousands of car enthusiasts who trust TWeb to manage their vehicle collections.</p>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-user-plus"></i> Create Free Account
+                        </a>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Add Font Awesome if not already loaded
+        if (!document.querySelector('link[href*="font-awesome"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+            document.head.appendChild(link);
+        }
+    </script>
+}

@@ -1,0 +1,183 @@
+@model TWeb.Models.ViewModels.CarRentalViewModel
+@{
+    ViewData["Title"] = $"Rent {Model.CarMake} {Model.CarModel}";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">@ViewData["Title"] (@Model.CarYear)</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="RentCar" method="post">
+                        <input asp-for="CarId" type="hidden" />
+                        <input asp-for="CarMake" type="hidden" />
+                        <input asp-for="CarModel" type="hidden" />
+                        <input asp-for="CarYear" type="hidden" />
+                        <input asp-for="DailyRate" type="hidden" />
+                        <input asp-for="MinRentalDays" type="hidden" />
+                        <input asp-for="MaxRentalDays" type="hidden" />
+                        
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="StartDate" class="form-label"></label>
+                                    <input asp-for="StartDate" class="form-control" type="date" id="startDate" />
+                                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="EndDate" class="form-label"></label>
+                                    <input asp-for="EndDate" class="form-control" type="date" id="endDate" />
+                                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="SpecialRequests" class="form-label"></label>
+                            <textarea asp-for="SpecialRequests" class="form-control" rows="3" placeholder="Any special requests or requirements..."></textarea>
+                            <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">Submit Rental Request</button>
+                            <a asp-action="Details" asp-route-id="@Model.CarId" class="btn btn-secondary">Back to Car Details</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Car Summary -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Rental Summary</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><strong>Vehicle:</strong> @Model.CarMake @Model.CarModel (@Model.CarYear)</li>
+                        <li><strong>Daily Rate:</strong> $@Model.DailyRate.ToString("N2")</li>
+                        @if (Model.MinRentalDays.HasValue)
+                        {
+                            <li><strong>Minimum Rental:</strong> @Model.MinRentalDays days</li>
+                        }
+                        @if (Model.MaxRentalDays.HasValue)
+                        {
+                            <li><strong>Maximum Rental:</strong> @Model.MaxRentalDays days</li>
+                        }
+                    </ul>
+                    
+                    <div id="rentalCalculation" class="mt-3" style="display: none;">
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span>Duration:</span>
+                            <span id="totalDays">0 days</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Daily Rate:</span>
+                            <span>$@Model.DailyRate.ToString("N2")</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <strong>Total Amount:</strong>
+                            <strong id="totalAmount">$0.00</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rental Terms -->
+            @if (!string.IsNullOrEmpty(Model.RentalTerms))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Rental Terms & Conditions</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">@Model.RentalTerms</p>
+                    </div>
+                </div>
+            }
+
+            <!-- Additional Details -->
+            @if (!string.IsNullOrEmpty(Model.RentalDetails))
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Additional Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">@Model.RentalDetails</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const rentalCalculation = document.getElementById('rentalCalculation');
+        const totalDaysSpan = document.getElementById('totalDays');
+        const totalAmountSpan = document.getElementById('totalAmount');
+        const dailyRate = @Model.DailyRate;
+        const minRentalDays = @(Model.MinRentalDays ?? 1);
+        const maxRentalDays = @(Model.MaxRentalDays ?? 365);
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.min = today;
+        endDateInput.min = today;
+
+        function calculateRental() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            
+            if (startDate && endDate && endDate > startDate) {
+                const timeDiff = endDate.getTime() - startDate.getTime();
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                const totalAmount = daysDiff * dailyRate;
+                
+                totalDaysSpan.textContent = daysDiff + ' day' + (daysDiff !== 1 ? 's' : '');
+                totalAmountSpan.textContent = '$' + totalAmount.toFixed(2);
+                rentalCalculation.style.display = 'block';
+                
+                // Validate rental duration
+                if (daysDiff < minRentalDays) {
+                    endDateInput.setCustomValidity('Minimum rental period is ' + minRentalDays + ' days');
+                } else if (daysDiff > maxRentalDays) {
+                    endDateInput.setCustomValidity('Maximum rental period is ' + maxRentalDays + ' days');
+                } else {
+                    endDateInput.setCustomValidity('');
+                }
+            } else {
+                rentalCalculation.style.display = 'none';
+                endDateInput.setCustomValidity('');
+            }
+        }
+
+        startDateInput.addEventListener('change', function() {
+            // Set end date minimum to start date
+            endDateInput.min = this.value;
+            calculateRental();
+        });
+
+        endDateInput.addEventListener('change', calculateRental);
+
+        // Initial calculation if dates are already set
+        calculateRental();
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

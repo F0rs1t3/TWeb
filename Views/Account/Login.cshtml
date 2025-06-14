@@ -1,0 +1,103 @@
+@model TWeb.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="form-container">
+            <h1 class="text-center mb-4">Welcome Back</h1>
+            <p class="text-center text-muted mb-4">Sign in to your TWeb account</p>
+            
+            <form asp-action="Login" method="post" id="loginForm">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                
+                <div class="form-group">
+                    <label asp-for="UserName" class="form-label">Username *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input asp-for="UserName" class="form-control" placeholder="Enter your username" required />
+                    </div>
+                    <span asp-validation-for="UserName" class="invalid-feedback"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Password *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required />
+                        <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password" class="invalid-feedback"></span>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">
+                            Remember me on this device
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </div>
+                
+                <div class="text-center">
+                    <p class="mb-0">Don't have an account? 
+                        <a asp-action="Register" class="text-decoration-none">Create one here</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Add Font Awesome if not already loaded
+        if (!document.querySelector('link[href*="font-awesome"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+            document.head.appendChild(link);
+        }
+        
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.querySelector('input[name="Password"]');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Form submission with loading state
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            
+            // Re-enable button after 10 seconds as fallback
+            setTimeout(() => {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }, 10000);
+        });
+    </script>
+}

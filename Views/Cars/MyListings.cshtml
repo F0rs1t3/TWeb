@@ -1,0 +1,67 @@
+@model IEnumerable<TWeb.Models.Car>
+@{
+    ViewData["Title"] = "My Car Listings";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@ViewData["Title"]</h2>
+        <a asp-action="Create" class="btn btn-primary">Add New Car</a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var car in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(car.PhotoPath))
+                        {
+                            <img src="~/images/cars/@car.PhotoPath" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <span class="text-muted">No Image</span>
+                            </div>
+                        }
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@car.Brand @car.Model (@car.Year)</h5>
+                            <p class="card-text">@car.Description</p>
+                            <div class="mt-auto">
+                                <p class="card-text">
+                                    <strong>Sale Price: $@car.Price.ToString("N2")</strong><br />
+                                    <small class="text-muted">@car.Mileage miles • Listed @car.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                </p>
+                                @if (car.IsAvailableForRental)
+                                {
+                                    <p class="card-text">
+                                        <small class="text-success">
+                                            <i class="fas fa-car"></i> Rental: $@car.DailyRentalPrice/day
+                                        </small>
+                                    </p>
+                                }
+                                <div class="btn-group w-100">
+                                    <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-outline-primary btn-sm">View</a>
+                                    <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-outline-warning btn-sm">Edit</a>
+                                    <form asp-action="Delete" asp-route-id="@car.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <h4>No cars listed yet</h4>
+            <p>You haven't added any cars to sell or rent.</p>
+            <a asp-action="Create" class="btn btn-primary">Add Your First Car</a>
+        </div>
+    }
+</div>

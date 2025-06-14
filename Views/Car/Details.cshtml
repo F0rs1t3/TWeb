@@ -1,0 +1,137 @@
+@model TWeb.Models.Car
+
+@{
+    ViewData["Title"] = $"{Model.Brand} {Model.Model}";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            @if (!string.IsNullOrEmpty(Model.PhotoPath))
+            {
+                <img src="@Model.PhotoPath" class="card-img-top car-image" alt="@Model.Brand @Model.Model" style="height: 400px; object-fit: cover;">
+            }
+            else
+            {
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-car fa-4x mb-3"></i>
+                        <p>No image available</p>
+                    </div>
+                </div>
+            }
+            
+            <div class="card-body">
+                <h1 class="card-title">@Model.Brand @Model.Model</h1>
+                
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <strong>Year:</strong> @Model.Year
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Mileage:</strong> @Model.Mileage.ToString("N0") km
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <strong>Owner:</strong> @Model.Owner?.FirstName @Model.Owner?.LastName
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Added:</strong> @Model.CreatedAt.ToString("MMMM dd, yyyy")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Actions</h5>
+            </div>
+            <div class="card-body">
+                @if (User.Identity?.IsAuthenticated == true && (Model.OwnerId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) || User.IsInRole("Administrator")))
+                {
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit Car
+                        </a>
+                        
+                        <a href="@Url.Action("Delete", new { id = Model.Id })" 
+                           class="btn btn-danger" 
+                           data-confirm-delete="Are you sure you want to delete this car? This action cannot be undone.">
+                            <i class="fas fa-trash"></i> Delete Car
+                        </a>
+                    </div>
+                    
+                    <hr>
+                }
+                
+                <div class="d-grid gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Cars
+                    </a>
+                    
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-action="MyCars" class="btn btn-outline-primary">
+                            <i class="fas fa-user"></i> My Cars
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <!-- Car Statistics Card -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0">Car Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <h4 class="text-primary">@Model.Year</h4>
+                            <small class="text-muted">Year</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success">@((DateTime.Now.Year - Model.Year).ToString())</h4>
+                        <small class="text-muted">Years Old</small>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="text-center">
+                    <h4 class="text-info">@Model.Mileage.ToString("N0")</h4>
+                    <small class="text-muted">Kilometers</small>
+                </div>
+                
+                @{
+                    var avgKmPerYear = Model.Mileage / Math.Max(DateTime.Now.Year - Model.Year, 1);
+                }
+                
+                <hr>
+                
+                <div class="text-center">
+                    <h5 class="text-warning">@avgKmPerYear.ToString("N0")</h5>
+                    <small class="text-muted">Avg KM/Year</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add Font Awesome if not already loaded
+        if (!document.querySelector('link[href*="font-awesome"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+            document.head.appendChild(link);
+        }
+    </script>
+}
