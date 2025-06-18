@@ -10,21 +10,23 @@ namespace TWeb.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<CarService> _logger;
+        private readonly IFileUploadService _fileUploadService;
 
-        public CarService(ApplicationDbContext context, ILogger<CarService> logger)
+        public CarService(ApplicationDbContext context, ILogger<CarService> logger, IFileUploadService fileUploadService)
         {
             _context = context;
             _logger = logger;
+            _fileUploadService = fileUploadService;
         }
 
         public async Task<IEnumerable<Car>> GetAllCarsAsync()
         {
             try
             {
-                _logger.LogInformation("Fetching all cars");
+                _logger.LogInformation("Fetching all cars for admin");
                 return await _context.Cars
                     .Include(c => c.Owner)
-                    .OrderByDescending(c => c.CreatedAt)
+                    .OrderByDescending(c => c.Id)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -191,8 +193,14 @@ namespace TWeb.Services
                 // Handle photo upload if provided
                 if (model.Photo != null && model.Photo.Length > 0)
                 {
-                    // For now, just store the filename - implement actual file upload logic as needed
-                    car.PhotoPath = model.Photo.FileName;
+                    if (_fileUploadService.IsValidImageFile(model.Photo))
+                    {
+                        car.PhotoPath = await _fileUploadService.UploadFileAsync(model.Photo, "cars");
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid image file format or size.");
+                    }
                 }
 
                 _context.Cars.Add(car);
@@ -250,7 +258,20 @@ namespace TWeb.Services
                 // Handle photo upload if provided
                 if (model.Photo != null && model.Photo.Length > 0)
                 {
-                    car.PhotoPath = model.Photo.FileName;
+                    if (_fileUploadService.IsValidImageFile(model.Photo))
+                    {
+                        // Delete old photo if exists
+                        if (!string.IsNullOrEmpty(car.PhotoPath))
+                        {
+                            await _fileUploadService.DeleteFileAsync(car.PhotoPath);
+                        }
+                        
+                        car.PhotoPath = await _fileUploadService.UploadFileAsync(model.Photo, "cars");
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid image file format or size.");
+                    }
                 }
 
                 await _context.SaveChangesAsync();
@@ -262,34 +283,44 @@ namespace TWeb.Services
             }
         }
 
-        public async Task DeleteCarAsync(int carId)
+        public async Task<bool> DeleteCarAsync(int carId, string userId, bool isAdmin = false)
         {
             try
             {
-                _logger.LogInformation("Deleting car {CarId}", carId);
-                
+                var canDelete = await CanUserDeleteCarAsync(carId, userId, isAdmin);
+                if (!canDelete)
+                {
+                    return false;
+                }
+
                 var car = await _context.Cars.FindAsync(carId);
                 if (car == null)
                 {
-                    throw new ArgumentException("Car not found");
+                    return false;
                 }
 
-                // Check if there are active rentals
-                var hasActiveRentals = await _context.CarRentals
-                    .AnyAsync(r => r.CarId == carId && 
-                                  (r.Status == RentalStatus.Confirmed || r.Status == RentalStatus.Active));
-
-                if (hasActiveRentals)
+                // Șterge imaginea dacă există
+                if (!string.IsNullOrEmpty(car.PhotoPath) && _fileUploadService != null)
                 {
-                    throw new InvalidOperationException("Cannot delete car with active rental bookings.");
+                    try
+                    {
+                        await _fileUploadService.DeleteFileAsync(car.PhotoPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Could not delete file: {PhotoPath}", car.PhotoPath);
+                    }
                 }
 
                 _context.Cars.Remove(car);
                 await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Car {CarId} deleted by user {UserId} (Admin: {IsAdmin})", carId, userId, isAdmin);
+                return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting car {CarId}", carId);
+                _logger.LogError(ex, "Error deleting car: {CarId} by user: {UserId}", carId, userId);
                 throw;
             }
         }
@@ -344,27 +375,24 @@ namespace TWeb.Services
             }
         }
 
-        public async Task<bool> CanUserDeleteCarAsync(int carId, string userId)
+        public async Task<bool> CanUserDeleteCarAsync(int carId, string userId, bool isAdmin = false)
         {
             try
             {
-                var car = await _context.Cars.FindAsync(carId);
-                if (car == null || car.OwnerId != userId)
+                // Admin poate șterge orice anunț
+                if (isAdmin)
                 {
-                    return false;
+                    return true;
                 }
-
-                // Check if there are active rentals
-                var hasActiveRentals = await _context.CarRentals
-                    .AnyAsync(r => r.CarId == carId && 
-                                  (r.Status == RentalStatus.Confirmed || r.Status == RentalStatus.Active));
-
-                return !hasActiveRentals;
+        
+                // Pentru utilizatori normali, verifică dacă sunt proprietarii
+                var car = await _context.Cars.FindAsync(carId);
+                return car != null && car.OwnerId == userId;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error checking delete permissions for car {CarId} and user: {UserId}", carId, userId);
-                return false;
+                _logger.LogError(ex, "Error checking delete permissions for car: {CarId}, user: {UserId}", carId, userId);
+                throw;
             }
         }
     }

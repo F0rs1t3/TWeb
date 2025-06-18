@@ -461,30 +461,76 @@ namespace TWeb.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                if (!await _carService.CanUserDeleteCarAsync(id, user!.Id))
+                var isAdmin = await _userManager.IsInRoleAsync(user!, "Admin");
+        
+                var success = await _carService.DeleteCarAsync(id, user!.Id, isAdmin);
+        
+                if (success)
                 {
-                    TempData["Error"] = "You don't have permission to delete this car or it has active rentals.";
-                    return RedirectToAction(nameof(Details), new { id });
+                    TempData["SuccessMessage"] = "Anunțul a fost șters cu succes.";
                 }
-
-                await _carService.DeleteCarAsync(id);
-                TempData["Success"] = "Car listing deleted successfully!";
-                return RedirectToAction(nameof(MyListings));
-            }
-            catch (InvalidOperationException ex)
-            {
-                TempData["Error"] = ex.Message;
-                return RedirectToAction(nameof(Details), new { id });
-            }
-            catch (ArgumentException ex)
-            {
-                TempData["Error"] = ex.Message;
-                return RedirectToAction(nameof(Details), new { id });
+                else
+                {
+                    TempData["ErrorMessage"] = "Nu aveți permisiunea să ștergeți acest anunț.";
+                }
             }
             catch (Exception)
             {
-                TempData["Error"] = "An error occurred while deleting the car listing.";
-                return RedirectToAction(nameof(Details), new { id });
+                TempData["ErrorMessage"] = "A apărut o eroare la ștergerea anunțului.";
+            }
+    
+            // Redirect în funcție de context
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Buy"); // sau AdminManage dacă ai pagina
+            }
+            else
+            {
+                return RedirectToAction("MyListings");
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminDelete(int id)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var isAdmin = await _userManager.IsInRoleAsync(user!, "Admin");
+        
+                var success = await _carService.DeleteCarAsync(id, user!.Id, isAdmin);
+        
+                if (success)
+                {
+                    TempData["SuccessMessage"] = "Anunțul a fost șters cu succes.";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Nu s-a putut șterge anunțul.";
+                }
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "A apărut o eroare la ștergerea anunțului.";
+            }
+    
+            return RedirectToAction("Buy");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminManage()
+        {
+            try
+            {
+                var allCars = await _carService.GetAllCarsAsync();
+                return View(allCars);
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "A apărut o eroare la încărcarea anunțurilor.";
+                return RedirectToAction("Index", "Home");
             }
         }
     }

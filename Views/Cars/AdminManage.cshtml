@@ -1,0 +1,99 @@
+@model IEnumerable<TWeb.Models.Car>
+@{
+    ViewData["Title"] = "Gestionare Anunțuri - Admin";
+}
+
+<div class="container mt-4">
+    <h2>Gestionare Anunțuri - Admin</h2>
+    
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        @foreach (var car in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(car.PhotoPath))
+                    {
+                        <img src="@car.PhotoPath" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="text-muted">Fără imagine</span>
+                        </div>
+                    }
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@car.Brand @car.Model</h5>
+                        <p class="card-text">
+                            <strong>An:</strong> @car.Year<br>
+                            <strong>Preț:</strong> @car.Price.ToString("C")<br>
+                            <strong>Proprietar:</strong> @car.Owner?.Email
+                        </p>
+                        
+                        <div class="mt-auto">
+                            <div class="btn-group w-100" role="group">
+                                <a href="@Url.Action("Details", new { id = car.Id })" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye"></i> Detalii
+                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-@car.Id">
+                                        <i class="fas fa-trash"></i> Șterge
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal pentru confirmare ștergere -->
+            <div class="modal fade" id="deleteModal-@car.Id" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirmare Ștergere</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Ești sigur că vrei să ștergi anunțul pentru <strong>@car.Brand @car.Model</strong>?</p>
+                            <p class="text-muted">Această acțiune nu poate fi anulată.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anulează</button>
+                            <form asp-action="Delete" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@car.Id" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger">Șterge Anunțul</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+    @if (!Model.Any())
+    {
+        <div class="text-center mt-5">
+            <h4>Nu există anunțuri în sistem</h4>
+            <p class="text-muted">Nu au fost găsite anunțuri de mașini.</p>
+        </div>
+    }
+</div>

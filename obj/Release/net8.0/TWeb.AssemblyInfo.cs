@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d34dbf9790ec79f98cefd3329aa68354626dfcd4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+be43a136b96073c4df934e1b920f56a6d47bd22b")]
 [assembly: System.Reflection.AssemblyProductAttribute("CarLux")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CarLux")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
