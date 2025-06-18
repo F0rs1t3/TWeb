@@ -14,11 +14,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\cars\01f1b891-f996-4f33-ad42-5801bcd2654f.jpg" />
+    <Content Remove="wwwroot\cars\3123a236-93ea-4c2f-8341-3f01ca71f05c.jpg" />
+    <Content Remove="wwwroot\cars\3303e88e-786a-4062-9112-3dd75c49f373.png" />
+    <Content Remove="wwwroot\cars\fe8add05-44f8-4481-a710-e2a85b3125db.png" />
+    <Content Remove="wwwroot\images\background.jpeg" />
+    <Content Remove="wwwroot\images\background.jpg" />
+    <Content Remove="wwwroot\images\cars\39f53a40-f11e-4370-a224-d1e89ae1f205_Screenshot 2025-04-24 200410.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\cars\" />
   </ItemGroup>
 
 </Project>

@@ -52,12 +52,26 @@ body {
 }
 
 .hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 3rem 0;
-  margin-bottom: 2rem;
-  border-radius: 8px;
+    background: url('/images/background.jpg') center center / cover no-repeat;
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
 }
+
+    .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* dark overlay for readability */
+        border-radius: 8px;
+        z-index: -1;
+    }
 
 .hero-section .display-4 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -126,6 +140,11 @@ body {
 }
 
 .card:hover {
+/*    transform: translateY(-2px);*/
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-fade:hover {
     transform: translateY(-2px);
 }
 
@@ -378,7 +397,16 @@ body {
         padding: 1.5rem;
         margin: 0 0.5rem 2rem;
     }
-    
+
+    select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='gray' class='bi bi-caret-down-fill' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14l-4.796-5.481C1.885 5.272 2.752 4 4.106 4h7.788c1.354 0 2.221 1.272 1.655 1.659l-4.796 5.481a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1rem;
+        padding-right: 2.5rem;
+    }
+
     .card-grid {
         grid-template-columns: 1fr;
         gap: 1rem;

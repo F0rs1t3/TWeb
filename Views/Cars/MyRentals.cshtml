@@ -26,7 +26,7 @@
                     @foreach (var rental in Model)
                     {
                         <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card">
+                            <div class="card card-fade">
                                 @if (!string.IsNullOrEmpty(rental.Car.PhotoPath))
                                 {
                                     <img src="@Url.Content("~/" + rental.Car.PhotoPath)" class="card-img-top" alt="@rental.Car.Brand @rental.Car.Model" style="height: 200px; object-fit: cover;" />

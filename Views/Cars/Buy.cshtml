@@ -18,7 +18,7 @@
             </div>
 
             <!-- Search and Filter Form -->
-            <div class="card mb-4">
+            <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <form method="get" asp-action="Buy">
                         <div class="row g-3">
@@ -28,7 +28,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="brand" class="form-label">Brand</label>
-                                <select class="form-select" id="brand" name="brand">
+                                <select class="form-control" id="brand" name="brand">
                                     <option value="">All Brands</option>
                                     @foreach (var brand in ViewBag.Brands as IEnumerable<string>)
                                     {
@@ -38,22 +38,30 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="minPrice" class="form-label">Min Price</label>
-                                <input type="number" class="form-control" id="minPrice" name="minPrice" value="@ViewBag.MinPrice" step="1000">
+                                <input type="number" class="form-control" id="minPrice" name="minPrice" value="@ViewBag.MinPrice" step="1000" placeholder="e.g. 3000">
                             </div>
                             <div class="col-md-2">
                                 <label for="maxPrice" class="form-label">Max Price</label>
-                                <input type="number" class="form-control" id="maxPrice" name="maxPrice" value="@ViewBag.MaxPrice" step="1000">
+                                <input type="number" class="form-control" id="maxPrice" name="maxPrice" value="@ViewBag.MaxPrice" step="1000" placeholder="e.g. 15000">
                             </div>
-                            <div class="col-md-3 d-flex align-items-end">
-                                <button type="submit" class="btn btn-outline-primary me-2">
-                                    <i class="fas fa-search"></i> Search
-                                </button>
-                                <a asp-action="Buy" class="btn btn-outline-secondary">Clear</a>
+
+                            <!-- Buttons aligned in one column -->
+                            <div class="col-md-3 pt-1">
+                                <label class="form-label invisible">Actions</label>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-search me-1"></i> Search
+                                    </button>
+                                    <a asp-action="Buy" class="btn btn-outline-secondary w-100">
+                                        Clear
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
+
 
             <!-- Cars Grid -->
             @if (Model.Any())
@@ -62,7 +70,7 @@
                     @foreach (var car in Model)
                     {
                         <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card h-100">
+                            <div class="card card-fade h-100">
                                 @if (!string.IsNullOrEmpty(car.PhotoPath))
                                 {
                                     <img src="~/@car.PhotoPath" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">

@@ -27,7 +27,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Buy">Buy Cars</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Buy">Cars for Sale</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Rental">Rent Cars</a>
@@ -53,7 +53,7 @@
                             @if (User.IsInRole("Admin"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AdminManage", "Cars")">Admin Manage</a>
+                            <a class="nav-link" href="@Url.Action("AdminManage", "Cars")">Admin Car Management</a>
                     </li>
                 }
                         }
@@ -147,11 +147,22 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - TWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="footer bg-dark text-light py-3 mt-auto">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-start">
+            <div>
+                <strong>CarLux</strong> &copy; 2025 — All rights reserved.
+                <a asp-controller="Home" asp-action="Privacy" class="text-muted text-decoration-none ms-2">Privacy</a>
+            </div>
+            <div class="mt-2 mt-md-0">
+                <a href="#" class="text-muted me-3"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-muted me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-muted me-3"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-muted"><i class="fab fa-linkedin-in"></i></a>
+            </div>
         </div>
     </footer>
+
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

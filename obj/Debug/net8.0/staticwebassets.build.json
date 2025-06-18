@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "VSGs9Sqrty/YCD8/kOLeGKvz4/wB5+KQEySrhtCcIoM=",
+  "Hash": "njkn5TZNPsXoNzk6DeWIu+QMn610bE019apnzMD+RCI=",
   "Source": "TWeb",
   "BasePath": "_content/TWeb",
   "Mode": "Default",
@@ -1340,6 +1340,27 @@
       "OriginalItemSpec": "wwwroot\\cars\\01f1b891-f996-4f33-ad42-5801bcd2654f.jpg"
     },
     {
+      "Identity": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\23a7f182-4273-42e3-b58a-0c3620199b39.jpg",
+      "SourceId": "TWeb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\",
+      "BasePath": "_content/TWeb",
+      "RelativePath": "cars/23a7f182-4273-42e3-b58a-0c3620199b39#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "av80x5co3k",
+      "Integrity": "Gh6vuNt6ey/WoH6t45FHxim9ZSq5nDQTUhdqJO5fh/Q=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\cars\\23a7f182-4273-42e3-b58a-0c3620199b39.jpg"
+    },
+    {
       "Identity": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\3123a236-93ea-4c2f-8341-3f01ca71f05c.jpg",
       "SourceId": "TWeb",
       "SourceType": "Discovered",
@@ -1382,6 +1403,27 @@
       "OriginalItemSpec": "wwwroot\\cars\\3303e88e-786a-4062-9112-3dd75c49f373.png"
     },
     {
+      "Identity": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\75fb3c1e-9479-4c87-a866-94794b3e49da.png",
+      "SourceId": "TWeb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\",
+      "BasePath": "_content/TWeb",
+      "RelativePath": "cars/75fb3c1e-9479-4c87-a866-94794b3e49da#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "5dzhppm57r",
+      "Integrity": "SSrd+Zx3juBamJjWMCayEJ2pYlOt1sJ44oMqQL6bnQs=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\cars\\75fb3c1e-9479-4c87-a866-94794b3e49da.png"
+    },
+    {
       "Identity": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\fe8add05-44f8-4481-a710-e2a85b3125db.png",
       "SourceId": "TWeb",
       "SourceType": "Discovered",
@@ -1401,6 +1443,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\cars\\fe8add05-44f8-4481-a710-e2a85b3125db.png"
+    },
+    {
+      "Identity": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\ffa3146e-e5ac-4a43-a535-498fa49d48b0.png",
+      "SourceId": "TWeb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\",
+      "BasePath": "_content/TWeb",
+      "RelativePath": "cars/ffa3146e-e5ac-4a43-a535-498fa49d48b0#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "83lle5cxjt",
+      "Integrity": "/J8CuzBelcyShGmQzVUWm9qSkuI5s9Y32l0kPS2TMZs=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\cars\\ffa3146e-e5ac-4a43-a535-498fa49d48b0.png"
     },
     {
       "Identity": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\css\\authorization.css",
@@ -6002,6 +6065,88 @@
       ]
     },
     {
+      "Route": "cars/23a7f182-4273-42e3-b58a-0c3620199b39.av80x5co3k.jpg",
+      "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\23a7f182-4273-42e3-b58a-0c3620199b39.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "29288"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Gh6vuNt6ey/WoH6t45FHxim9ZSq5nDQTUhdqJO5fh/Q=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 18 Jun 2025 16:34:24 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "av80x5co3k"
+        },
+        {
+          "Name": "label",
+          "Value": "cars/23a7f182-4273-42e3-b58a-0c3620199b39.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Gh6vuNt6ey/WoH6t45FHxim9ZSq5nDQTUhdqJO5fh/Q="
+        }
+      ]
+    },
+    {
+      "Route": "cars/23a7f182-4273-42e3-b58a-0c3620199b39.jpg",
+      "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\23a7f182-4273-42e3-b58a-0c3620199b39.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "29288"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Gh6vuNt6ey/WoH6t45FHxim9ZSq5nDQTUhdqJO5fh/Q=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 18 Jun 2025 16:34:24 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Gh6vuNt6ey/WoH6t45FHxim9ZSq5nDQTUhdqJO5fh/Q="
+        }
+      ]
+    },
+    {
       "Route": "cars/3123a236-93ea-4c2f-8341-3f01ca71f05c.igs2dnl7nq.jpg",
       "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\3123a236-93ea-4c2f-8341-3f01ca71f05c.jpg",
       "Selectors": [],
@@ -6166,6 +6311,88 @@
       ]
     },
     {
+      "Route": "cars/75fb3c1e-9479-4c87-a866-94794b3e49da.5dzhppm57r.png",
+      "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\75fb3c1e-9479-4c87-a866-94794b3e49da.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "524288"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SSrd+Zx3juBamJjWMCayEJ2pYlOt1sJ44oMqQL6bnQs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 18 Jun 2025 16:36:48 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "5dzhppm57r"
+        },
+        {
+          "Name": "label",
+          "Value": "cars/75fb3c1e-9479-4c87-a866-94794b3e49da.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-SSrd+Zx3juBamJjWMCayEJ2pYlOt1sJ44oMqQL6bnQs="
+        }
+      ]
+    },
+    {
+      "Route": "cars/75fb3c1e-9479-4c87-a866-94794b3e49da.png",
+      "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\75fb3c1e-9479-4c87-a866-94794b3e49da.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "524288"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SSrd+Zx3juBamJjWMCayEJ2pYlOt1sJ44oMqQL6bnQs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 18 Jun 2025 16:36:48 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-SSrd+Zx3juBamJjWMCayEJ2pYlOt1sJ44oMqQL6bnQs="
+        }
+      ]
+    },
+    {
       "Route": "cars/fe8add05-44f8-4481-a710-e2a85b3125db.png",
       "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\fe8add05-44f8-4481-a710-e2a85b3125db.png",
       "Selectors": [],
@@ -6244,6 +6471,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-pyNDaclvCWEwQLxPJfP56GvFG4YqJJWi1HRC4ucOHys="
+        }
+      ]
+    },
+    {
+      "Route": "cars/ffa3146e-e5ac-4a43-a535-498fa49d48b0.83lle5cxjt.png",
+      "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\ffa3146e-e5ac-4a43-a535-498fa49d48b0.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "190369"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/J8CuzBelcyShGmQzVUWm9qSkuI5s9Y32l0kPS2TMZs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 18 Jun 2025 18:08:25 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "83lle5cxjt"
+        },
+        {
+          "Name": "label",
+          "Value": "cars/ffa3146e-e5ac-4a43-a535-498fa49d48b0.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-/J8CuzBelcyShGmQzVUWm9qSkuI5s9Y32l0kPS2TMZs="
+        }
+      ]
+    },
+    {
+      "Route": "cars/ffa3146e-e5ac-4a43-a535-498fa49d48b0.png",
+      "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\ffa3146e-e5ac-4a43-a535-498fa49d48b0.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "190369"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/J8CuzBelcyShGmQzVUWm9qSkuI5s9Y32l0kPS2TMZs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 18 Jun 2025 18:08:25 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-/J8CuzBelcyShGmQzVUWm9qSkuI5s9Y32l0kPS2TMZs="
         }
       ]
     },

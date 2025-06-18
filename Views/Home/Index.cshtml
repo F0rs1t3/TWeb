@@ -2,19 +2,19 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="hero-section text-center">
+<div class="hero-section text-center fade-in">
     <div class="container">
         <h1 class="display-4 fw-bold mb-3">Welcome to CarLux</h1>
-        <p class="lead mb-4">Your personal car management system</p>
-        
+        <p class="lead mb-4">Your trusted second-hand car marketplace — safe, fast and verified.</p>
+
         @if (User.Identity?.IsAuthenticated == true)
         {
             <div class="d-flex justify-content-center gap-3">
                 <a href="@Url.Action("Create", "Cars")" class="btn btn-primary btn-lg">
-                    Add Your Car
+                    <i class="fas fa-plus-circle me-2"></i> List a Car
                 </a>
                 <a href="@Url.Action("MyListings", "Cars")" class="btn btn-outline-light btn-lg">
-                    My Car Listings
+                    <i class="fas fa-car-side me-2"></i> My Listings
                 </a>
             </div>
         }
@@ -22,46 +22,75 @@
         {
             <div class="d-flex justify-content-center gap-3">
                 <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">
-                    Get Started
+                    <i class="fas fa-user-plus me-2"></i> Get Started
                 </a>
-                <a asp-controller="Car" asp-action="Index" class="btn btn-outline-light btn-lg">
-                    Browse Cars
+                <a asp-controller="Cars" asp-action="Buy" class="btn btn-outline-light btn-lg" asp-area="">
+                    <i class="fas fa-search me-2"></i> Browse Cars
                 </a>
             </div>
         }
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-4 mb-4">
-            <div class="card h-100 text-center">
+<div class="container fade-in">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Why Choose CarLux?</h2>
+        <p class="text-muted">We simplify the car buying and selling process, ensuring trust, transparency, and tech-powered tools.</p>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card card-fade h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Manage Your Fleet</h5>
-                    <p class="card-text">Keep track of all your vehicles in one place.</p>
+                    <i class="fas fa-cogs fa-3x mb-3 text-primary"></i>
+                    <h5 class="card-title">Verified Listings</h5>
+                    <p class="card-text">Each car is reviewed and approved before going public, ensuring transparency and trust.</p>
                 </div>
             </div>
         </div>
-        
-        <div class="col-lg-4 mb-4">
-            <div class="card h-100 text-center">
+
+        <div class="col-md-4 mb-4">
+            <div class="card card-fade h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Community Driven</h5>
-                    <p class="card-text">Connect with other car enthusiasts.</p>
+                    <i class="fas fa-shield-alt fa-3x mb-3 text-success"></i>
+                    <h5 class="card-title">Safe Transactions</h5>
+                    <p class="card-text">Our platform uses the latest security protocols to protect your data and payments.</p>
                 </div>
             </div>
         </div>
-        
-        <div class="col-lg-4 mb-4">
-            <div class="card h-100 text-center">
+
+        <div class="col-md-4 mb-4">
+            <div class="card card-fade h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Secure & Private</h5>
-                    <p class="card-text">Your data is safe with us.</p>
+                    <i class="fas fa-users fa-3x mb-3 text-info"></i>
+                    <h5 class="card-title">Community Support</h5>
+                    <p class="card-text">Chat with verified dealers or buyers and schedule meetings at your convenience.</p>
                 </div>
             </div>
         </div>
     </div>
-    
+
+    @if (!User.Identity?.IsAuthenticated ?? true)
+    {
+        <div class="row mt-5 fade-in" style="margin-bottom: 2rem;">
+            <div class="col-12">
+                <div class="card bg-light text-center p-5">
+                    <h3 class="mb-3">Join the CarLux community today</h3>
+                    <p class="lead mb-4">Create your free account and get access to verified cars, seller tools, and secure communication.</p>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i> Sign Up
+                        </a>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
 </div>
 
 @section Scripts {

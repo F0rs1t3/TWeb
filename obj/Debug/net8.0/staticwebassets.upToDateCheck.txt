@@ -1,7 +1,10 @@
 wwwroot\cars\01f1b891-f996-4f33-ad42-5801bcd2654f.jpg
+wwwroot\cars\23a7f182-4273-42e3-b58a-0c3620199b39.jpg
 wwwroot\cars\3123a236-93ea-4c2f-8341-3f01ca71f05c.jpg
 wwwroot\cars\3303e88e-786a-4062-9112-3dd75c49f373.png
+wwwroot\cars\75fb3c1e-9479-4c87-a866-94794b3e49da.png
 wwwroot\cars\fe8add05-44f8-4481-a710-e2a85b3125db.png
+wwwroot\cars\ffa3146e-e5ac-4a43-a535-498fa49d48b0.png
 wwwroot\css\authorization.css
 wwwroot\css\components\alerts.css
 wwwroot\css\components\cards.css

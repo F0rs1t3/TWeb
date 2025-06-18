@@ -8,20 +8,24 @@
         <h2>@ViewData["Title"]</h2>
         @if (User.Identity.IsAuthenticated)
         {
-            <a asp-action="Create" class="btn btn-success">List Your Car</a>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> List Your Car
+            </a>
         }
     </div>
 
     <!-- Search and Filter Form -->
-    <div class="card mb-4">
+    <div class="card mb-4 shadow-sm">
         <div class="card-body">
             <form method="get" asp-action="Rental">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <input type="text" name="search" class="form-control" placeholder="Search brand or model..." value="@ViewBag.Search" />
+                        <label for="search" class="form-label">Search</label>
+                        <input type="text" class="form-control" id="search" name="search" value="@ViewBag.Search" placeholder="Brand or Model">
                     </div>
                     <div class="col-md-2">
-                        <select name="brand" class="form-select">
+                        <label for="brand" class="form-label">Brand</label>
+                        <select class="form-control" id="brand" name="brand">
                             <option value="">All Brands</option>
                             @foreach (var brand in ViewBag.Brands as IEnumerable<string>)
                             {
@@ -30,15 +34,22 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <input type="number" name="minPrice" class="form-control" placeholder="Min Daily Rate" value="@ViewBag.MinPrice" step="0.01" />
+                        <label for="minPrice" class="form-label">Min Daily Price</label>
+                        <input type="number" class="form-control" id="minPrice" name="minPrice" value="@ViewBag.MinPrice" step="0.01" placeholder="e.g. 10.00">
                     </div>
                     <div class="col-md-2">
-                        <input type="number" name="maxPrice" class="form-control" placeholder="Max Daily Rate" value="@ViewBag.MaxPrice" step="0.01" />
+                        <label for="maxPrice" class="form-label">Max Daily Price</label>
+                        <input type="number" class="form-control" id="maxPrice" name="maxPrice" value="@ViewBag.MaxPrice" step="0.01" placeholder="e.g. 100.00">
                     </div>
-                    <div class="col-md-3">
-                        <div class="btn-group w-100">
-                            <button type="submit" class="btn btn-primary">Search</button>
-                            <a asp-action="Rental" class="btn btn-outline-secondary">Clear</a>
+                    <div class="col-md-3 pt-1">
+                        <label class="form-label invisible">Actions</label>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-1"></i> Search
+                            </button>
+                            <a asp-action="Rental" class="btn btn-outline-secondary w-100">
+                                Clear
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -46,13 +57,14 @@
         </div>
     </div>
 
+
     @if (Model.Any())
     {
         <div class="row">
             @foreach (var car in Model)
             {
                 <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card h-100">
+                    <div class="card card-fade h-100">
                         @if (!string.IsNullOrEmpty(car.PhotoPath))
                         {
                             <img src="~/@car.PhotoPath" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">
