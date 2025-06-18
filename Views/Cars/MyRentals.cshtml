@@ -29,7 +29,7 @@
                             <div class="card">
                                 @if (!string.IsNullOrEmpty(rental.Car.PhotoPath))
                                 {
-                                    <img src="~/images/cars/@rental.Car.PhotoPath" class="card-img-top" alt="@rental.Car.Brand @rental.Car.Model" style="height: 200px; object-fit: cover;">
+                                    <img src="@Url.Content("~/" + rental.Car.PhotoPath)" class="card-img-top" alt="@rental.Car.Brand @rental.Car.Model" style="height: 200px; object-fit: cover;" />
                                 }
                                 else
                                 {

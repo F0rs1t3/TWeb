@@ -18,6 +18,60 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\cars\01f1b891-f996-4f33-ad42-5801bcd2654f.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\cars\3123a236-93ea-4c2f-8341-3f01ca71f05c.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TWeb</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TWeb</BasePath>
+      <RelativePath>cars/3123a236-93ea-4c2f-8341-3f01ca71f05c.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>igs2dnl7nq</Fingerprint>
+      <Integrity>bgpduQ3whnSEQMZC6V7XpsgVUc7KOhz4eXcYz4PzImw=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\cars\3123a236-93ea-4c2f-8341-3f01ca71f05c.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\cars\3303e88e-786a-4062-9112-3dd75c49f373.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TWeb</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TWeb</BasePath>
+      <RelativePath>cars/3303e88e-786a-4062-9112-3dd75c49f373.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>r3yod1hms5</Fingerprint>
+      <Integrity>pyNDaclvCWEwQLxPJfP56GvFG4YqJJWi1HRC4ucOHys=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\cars\3303e88e-786a-4062-9112-3dd75c49f373.png'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\cars\fe8add05-44f8-4481-a710-e2a85b3125db.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TWeb</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TWeb</BasePath>
+      <RelativePath>cars/fe8add05-44f8-4481-a710-e2a85b3125db.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>r3yod1hms5</Fingerprint>
+      <Integrity>pyNDaclvCWEwQLxPJfP56GvFG4YqJJWi1HRC4ucOHys=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\cars\fe8add05-44f8-4481-a710-e2a85b3125db.png'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\authorization.css'))">
       <SourceType>Package</SourceType>
       <SourceId>TWeb</SourceId>
