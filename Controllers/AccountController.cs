@@ -1,39 +1,38 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 using TWeb.Business.Interfaces;
 using TWeb.Models.ViewModels;
 
 namespace TWeb.Controllers
 {
-    public class AccountController : BaseController
+    public class AccountController : Controller
     {
-        private readonly IAccountBusinessLogic _accountBusinessLogic;
-        private readonly ILogger<AccountController> _logger;
+        private readonly IAccountBusinessLogic _accountLogic;
 
-        public AccountController(IAccountBusinessLogic accountBusinessLogic, ILogger<AccountController> logger)
+        public AccountController(IAccountBusinessLogic accountLogic)
         {
-            _accountBusinessLogic = accountBusinessLogic;
-            _logger = logger;
+            _accountLogic = accountLogic;
         }
 
         [HttpGet]
-        public IActionResult Register() => View();
+        public IActionResult Register()
+        {
+            return View();
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            if (ModelState.IsValid)
+            {
+                var result = await _accountLogic.RegisterAsync(model);
+                if (result.Succeeded)
+                    return RedirectToAction("Index", "Home");
 
-            var result = await _accountBusinessLogic.RegisterAsync(model);
-
-            if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
-
-            foreach (var error in result.Errors)
-                ModelState.AddModelError(string.Empty, error.Description);
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+            }
 
             return View(model);
         }
@@ -51,25 +50,17 @@ namespace TWeb.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var result = await _accountBusinessLogic.LoginAsync(model);
-
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
-                _logger.LogInformation("User {UserName} logged in.", model.UserName);
-                return RedirectToLocal(returnUrl);
-            }
+                var result = await _accountLogic.LoginAsync(model);
 
-            if (result.IsLockedOut)
-            {
-                _logger.LogWarning("User {UserName} account locked out.", model.UserName);
-                ModelState.AddModelError(string.Empty, "Account locked out.");
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                if (result.Succeeded)
+                    return RedirectToLocal(returnUrl);
+
+                if (result.IsLockedOut)
+                    ModelState.AddModelError(string.Empty, "Account locked out.");
+                else
+                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
             }
 
             return View(model);
@@ -78,18 +69,22 @@ namespace TWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> LogoutGet()
         {
-            await _accountBusinessLogic.LogoutAsync();
+            await _accountLogic.LogoutAsync();
             return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
-        public IActionResult AccessDenied() => View();
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
 
         private IActionResult RedirectToLocal(string? returnUrl)
         {
-            return Url.IsLocalUrl(returnUrl)
-                ? Redirect(returnUrl)
-                : RedirectToAction("Index", "Home");
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

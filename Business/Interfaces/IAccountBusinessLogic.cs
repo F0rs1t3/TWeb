@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using TWeb.Models;
 using TWeb.Models.ViewModels;
 
 namespace TWeb.Business.Interfaces

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "GswFv5MtVaAlpGrv6AvYCEezATcge7LrqYK4m6OZoHQ=",
+  "Hash": "PEBAPXeGQhFei15hIscMteK30XmReStWl+VipPwoEtk=",
   "Source": "TWeb",
   "BasePath": "_content/TWeb",
   "Mode": "Default",
@@ -1338,6 +1338,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\cars\\23a7f182-4273-42e3-b58a-0c3620199b39.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\2bf5f3c9-f897-4b41-94c8-e48792737de9.jpg",
+      "SourceId": "TWeb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\",
+      "BasePath": "_content/TWeb",
+      "RelativePath": "cars/2bf5f3c9-f897-4b41-94c8-e48792737de9#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "m2fc2ggo6x",
+      "Integrity": "TlnHar5Gss4Q+tq9FyWo9ys5vdC38lnhPo1lgv54HFY=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\cars\\2bf5f3c9-f897-4b41-94c8-e48792737de9.jpg"
     },
     {
       "Identity": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\75fb3c1e-9479-4c87-a866-94794b3e49da.png",
@@ -5956,6 +5977,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-Gh6vuNt6ey/WoH6t45FHxim9ZSq5nDQTUhdqJO5fh/Q="
+        }
+      ]
+    },
+    {
+      "Route": "cars/2bf5f3c9-f897-4b41-94c8-e48792737de9.jpg",
+      "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\2bf5f3c9-f897-4b41-94c8-e48792737de9.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6757"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TlnHar5Gss4Q+tq9FyWo9ys5vdC38lnhPo1lgv54HFY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 29 Jun 2025 22:17:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-TlnHar5Gss4Q+tq9FyWo9ys5vdC38lnhPo1lgv54HFY="
+        }
+      ]
+    },
+    {
+      "Route": "cars/2bf5f3c9-f897-4b41-94c8-e48792737de9.m2fc2ggo6x.jpg",
+      "AssetFile": "C:\\Users\\vitca\\source\\repos\\F0rs1t3\\TWeb\\wwwroot\\cars\\2bf5f3c9-f897-4b41-94c8-e48792737de9.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6757"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TlnHar5Gss4Q+tq9FyWo9ys5vdC38lnhPo1lgv54HFY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 29 Jun 2025 22:17:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "m2fc2ggo6x"
+        },
+        {
+          "Name": "label",
+          "Value": "cars/2bf5f3c9-f897-4b41-94c8-e48792737de9.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-TlnHar5Gss4Q+tq9FyWo9ys5vdC38lnhPo1lgv54HFY="
         }
       ]
     },

@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TWeb.Data;
+using TWeb.Business.Interfaces;
 using TWeb.Models;
 using TWeb.Models.ViewModels;
 using TWeb.Services.Interfaces;
@@ -12,21 +11,20 @@ namespace TWeb.Controllers
     [Authorize]
     public class CarsController : BaseController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICarsBusinessLogic _carsBusinessLogic;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICarService _carService;
 
         public CarsController(
-            ApplicationDbContext context, 
+            ICarsBusinessLogic carsBusinessLogic,
             UserManager<ApplicationUser> userManager,
             ICarService carService)
         {
-            _context = context;
+            _carsBusinessLogic = carsBusinessLogic;
             _userManager = userManager;
             _carService = carService;
         }
 
-        // GET: Cars/Buy
         [AllowAnonymous]
         public async Task<IActionResult> Buy(string? search, string? brand, decimal? minPrice, decimal? maxPrice)
         {
@@ -34,7 +32,7 @@ namespace TWeb.Controllers
             {
                 var cars = await _carService.GetCarsForSaleAsync(search, brand, minPrice, maxPrice);
                 var brands = await _carService.GetAvailableBrandsAsync();
-                
+
                 ViewBag.Brands = brands;
                 ViewBag.Search = search;
                 ViewBag.Brand = brand;
@@ -43,14 +41,13 @@ namespace TWeb.Controllers
 
                 return View(cars);
             }
-            catch (Exception)
+            catch
             {
                 TempData["Error"] = "An error occurred while loading cars for sale.";
                 return View(new List<Car>());
             }
         }
 
-        // GET: Cars/Rental
         [AllowAnonymous]
         public async Task<IActionResult> Rental(string? search, string? brand, decimal? minPrice, decimal? maxPrice)
         {
@@ -58,7 +55,7 @@ namespace TWeb.Controllers
             {
                 var cars = await _carService.GetCarsForRentalAsync(search, brand, minPrice, maxPrice);
                 var brands = await _carService.GetRentalBrandsAsync();
-                
+
                 ViewBag.Brands = brands;
                 ViewBag.Search = search;
                 ViewBag.Brand = brand;
@@ -67,29 +64,25 @@ namespace TWeb.Controllers
 
                 return View(cars);
             }
-            catch (Exception)
+            catch
             {
                 TempData["Error"] = "An error occurred while loading cars for rental.";
                 return View(new List<Car>());
             }
         }
 
-        // GET: Cars/Create
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Cars/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateCarViewModel viewModel)
         {
             if (!ModelState.IsValid)
-            {
                 return View(viewModel);
-            }
 
             try
             {
@@ -104,14 +97,13 @@ namespace TWeb.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(viewModel);
             }
-            catch (Exception)
+            catch
             {
                 TempData["Error"] = "An error occurred while creating the car listing.";
                 return View(viewModel);
             }
         }
 
-        // GET: Cars/Details/5
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
@@ -119,30 +111,22 @@ namespace TWeb.Controllers
             {
                 var car = await _carService.GetCarByIdAsync(id);
                 if (car == null)
-                {
                     return NotFound();
-                }
 
                 return View(car);
             }
-            catch (Exception)
+            catch
             {
                 TempData["Error"] = "An error occurred while loading car details.";
                 return RedirectToAction(nameof(Buy));
             }
         }
 
-        // GET: Cars/RentCar/5
         public async Task<IActionResult> RentCar(int id)
         {
-            var car = await _context.Cars
-                .Include(c => c.Owner)
-                .FirstOrDefaultAsync(c => c.Id == id && c.IsAvailableForRental);
-
+            var car = await _carsBusinessLogic.GetCarForRentalAsync(id);
             if (car == null)
-            {
                 return NotFound();
-            }
 
             var viewModel = new CarRentalViewModel
             {
@@ -160,54 +144,33 @@ namespace TWeb.Controllers
             return View(viewModel);
         }
 
-        // POST: Cars/RentCar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RentCar(CarRentalViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var car = await _context.Cars.FindAsync(model.CarId);
+                var car = await _carsBusinessLogic.GetCarByIdAsync(model.CarId);
                 if (car == null || !car.IsAvailableForRental)
-                {
                     return NotFound();
-                }
 
-                // Validate rental dates
                 if (model.StartDate < DateTime.Today)
-                {
                     ModelState.AddModelError(nameof(model.StartDate), "Start date cannot be in the past");
-                }
 
                 if (model.EndDate <= model.StartDate)
-                {
                     ModelState.AddModelError(nameof(model.EndDate), "End date must be after start date");
-                }
 
-                // Validate rental duration
                 var totalDays = model.TotalDays;
+
                 if (car.MinRentalDays.HasValue && totalDays < car.MinRentalDays.Value)
-                {
                     ModelState.AddModelError(nameof(model.EndDate), $"Minimum rental period is {car.MinRentalDays} days");
-                }
 
                 if (car.MaxRentalDays.HasValue && totalDays > car.MaxRentalDays.Value)
-                {
                     ModelState.AddModelError(nameof(model.EndDate), $"Maximum rental period is {car.MaxRentalDays} days");
-                }
 
-                // Check for conflicting rentals
-                var hasConflict = await _context.CarRentals
-                    .AnyAsync(r => r.CarId == model.CarId && 
-                                  r.Status != RentalStatus.Cancelled &&
-                                  ((r.StartDate <= model.StartDate && r.EndDate >= model.StartDate) ||
-                                   (r.StartDate <= model.EndDate && r.EndDate >= model.EndDate) ||
-                                   (r.StartDate >= model.StartDate && r.EndDate <= model.EndDate)));
-
+                var hasConflict = await _carsBusinessLogic.HasRentalConflictAsync(model.CarId, model.StartDate, model.EndDate);
                 if (hasConflict)
-                {
                     ModelState.AddModelError("", "The car is not available for the selected dates");
-                }
 
                 if (ModelState.IsValid)
                 {
@@ -225,16 +188,14 @@ namespace TWeb.Controllers
                         Status = RentalStatus.Pending
                     };
 
-                    _context.CarRentals.Add(rental);
-                    await _context.SaveChangesAsync();
+                    await _carsBusinessLogic.AddRentalAsync(rental);
 
                     TempData["Success"] = "Rental request submitted successfully! The owner will be notified.";
                     return RedirectToAction(nameof(MyRentals));
                 }
             }
 
-            // Reload car data if validation fails
-            var carData = await _context.Cars.FindAsync(model.CarId);
+            var carData = await _carsBusinessLogic.GetCarByIdAsync(model.CarId);
             if (carData != null)
             {
                 model.CarMake = carData.Brand;
@@ -250,7 +211,6 @@ namespace TWeb.Controllers
             return View(model);
         }
 
-        // GET: Cars/MyListings
         [HttpGet]
         public async Task<IActionResult> MyListings()
         {
@@ -260,60 +220,42 @@ namespace TWeb.Controllers
                 var cars = await _carService.GetCarsByOwnerAsync(user!.Id);
                 return View(cars);
             }
-            catch (Exception)
+            catch
             {
                 TempData["Error"] = "An error occurred while loading your car listings.";
                 return View(new List<Car>());
             }
         }
 
-        // GET: Cars/MyRentals
         public async Task<IActionResult> MyRentals()
         {
             var user = await _userManager.GetUserAsync(User);
-            var rentals = await _context.CarRentals
-                .Include(r => r.Car)
-                .Include(r => r.Car.Owner)
-                .Where(r => r.RenterId == user!.Id)
-                .OrderByDescending(r => r.CreatedAt)
-                .ToListAsync();
-
+            var rentals = await _carsBusinessLogic.GetMyRentalsAsync(user!.Id);
             return View(rentals);
         }
 
-        // GET: Cars/RentalRequests
         public async Task<IActionResult> RentalRequests()
         {
             var user = await _userManager.GetUserAsync(User);
-            var rentalRequests = await _context.CarRentals
-                .Include(r => r.Car)
-                .Include(r => r.Renter)
-                .Where(r => r.Car.OwnerId == user!.Id)
-                .OrderByDescending(r => r.CreatedAt)
-                .ToListAsync();
-
+            var rentalRequests = await _carsBusinessLogic.GetRentalRequestsForOwnerAsync(user!.Id);
             return View(rentalRequests);
         }
 
-        // POST: Cars/ConfirmRental/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmRental(int id)
         {
-            var rental = await _context.CarRentals
-                .Include(r => r.Car)
-                .FirstOrDefaultAsync(r => r.Id == id);
+            var rental = await _carsBusinessLogic.GetRentalWithCarAsync(id);
+            var currentUser = await _userManager.GetUserAsync(User);
 
-            if (rental == null || rental.Car.OwnerId != (await _userManager.GetUserAsync(User))!.Id)
-            {
+            if (rental == null || rental.Car.OwnerId != currentUser!.Id)
                 return NotFound();
-            }
 
             if (rental.Status == RentalStatus.Pending)
             {
                 rental.Status = RentalStatus.Confirmed;
                 rental.ConfirmedAt = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
+                await _carsBusinessLogic.SaveChangesAsync();
 
                 TempData["Success"] = "Rental request confirmed successfully!";
             }
@@ -321,34 +263,25 @@ namespace TWeb.Controllers
             return RedirectToAction(nameof(RentalRequests));
         }
 
-        // POST: Cars/CancelRental/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelRental(int id)
         {
-            var rental = await _context.CarRentals
-                .Include(r => r.Car)
-                .FirstOrDefaultAsync(r => r.Id == id);
+            var rental = await _carsBusinessLogic.GetRentalWithCarAsync(id);
+            var user = await _userManager.GetUserAsync(User);
 
             if (rental == null)
-            {
                 return NotFound();
-            }
 
-            var user = await _userManager.GetUserAsync(User);
-            
-            // Allow cancellation by either the renter or the car owner
             if (rental.RenterId != user!.Id && rental.Car.OwnerId != user.Id)
-            {
                 return Forbid();
-            }
 
             try
             {
                 if (rental.Status == RentalStatus.Pending || rental.Status == RentalStatus.Confirmed)
                 {
                     rental.Status = RentalStatus.Cancelled;
-                    await _context.SaveChangesAsync();
+                    await _carsBusinessLogic.SaveChangesAsync();
                     TempData["Success"] = "Rental cancelled successfully!";
                 }
                 else
@@ -356,36 +289,29 @@ namespace TWeb.Controllers
                     TempData["Error"] = "Unable to cancel rental.";
                 }
             }
-            catch (Exception)
+            catch
             {
                 TempData["Error"] = "An error occurred while cancelling the rental.";
             }
 
-            // Determine redirect based on referrer or default to MyRentals
             var referer = Request.Headers["Referer"].ToString();
             if (referer.Contains("RentalRequests"))
-            {
                 return RedirectToAction(nameof(RentalRequests));
-            }
+
             return RedirectToAction(nameof(MyRentals));
         }
 
-        // GET: Cars/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
                 var car = await _carService.GetCarByIdAsync(id);
                 if (car == null)
-                {
                     return NotFound();
-                }
 
                 var user = await _userManager.GetUserAsync(User);
                 if (!await _carService.CanUserEditCarAsync(id, user!.Id))
-                {
                     return Forbid();
-                }
 
                 var model = new EditCarViewModel
                 {
@@ -407,33 +333,26 @@ namespace TWeb.Controllers
 
                 return View(model);
             }
-            catch (Exception)
+            catch
             {
                 TempData["Error"] = "An error occurred while loading the car for editing.";
                 return RedirectToAction(nameof(MyListings));
             }
         }
 
-        // POST: Cars/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditCarViewModel viewModel)
         {
             if (id != viewModel.Id)
-            {
                 return NotFound();
-            }
 
             var user = await _userManager.GetUserAsync(User);
             if (!await _carService.CanUserEditCarAsync(id, user!.Id))
-            {
                 return Forbid();
-            }
 
             if (!ModelState.IsValid)
-            {
                 return View(viewModel);
-            }
 
             try
             {
@@ -446,14 +365,13 @@ namespace TWeb.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(viewModel);
             }
-            catch (Exception)
+            catch
             {
                 TempData["Error"] = "An error occurred while updating the car listing.";
                 return View(viewModel);
             }
         }
 
-        // POST: Cars/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -462,32 +380,19 @@ namespace TWeb.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 var isAdmin = await _userManager.IsInRoleAsync(user!, "Admin");
-        
+
                 var success = await _carService.DeleteCarAsync(id, user!.Id, isAdmin);
-        
-                if (success)
-                {
-                    TempData["SuccessMessage"] = "Anunțul a fost șters cu succes.";
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = "Nu aveți permisiunea să ștergeți acest anunț.";
-                }
+
+                TempData[success ? "SuccessMessage" : "ErrorMessage"] = success ?
+                    "Anunțul a fost șters cu succes." :
+                    "Nu aveți permisiunea să ștergeți acest anunț.";
             }
-            catch (Exception)
+            catch
             {
                 TempData["ErrorMessage"] = "A apărut o eroare la ștergerea anunțului.";
             }
-    
-            // Redirect în funcție de context
-            if (User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Buy"); // sau AdminManage dacă ai pagina
-            }
-            else
-            {
-                return RedirectToAction("MyListings");
-            }
+
+            return User.IsInRole("Admin") ? RedirectToAction("Buy") : RedirectToAction("MyListings");
         }
 
         [HttpPost]
@@ -498,23 +403,17 @@ namespace TWeb.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 var isAdmin = await _userManager.IsInRoleAsync(user!, "Admin");
-        
                 var success = await _carService.DeleteCarAsync(id, user!.Id, isAdmin);
-        
-                if (success)
-                {
-                    TempData["SuccessMessage"] = "Anunțul a fost șters cu succes.";
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = "Nu s-a putut șterge anunțul.";
-                }
+
+                TempData[success ? "SuccessMessage" : "ErrorMessage"] = success ?
+                    "Anunțul a fost șters cu succes." :
+                    "Nu s-a putut șterge anunțul.";
             }
-            catch (Exception)
+            catch
             {
                 TempData["ErrorMessage"] = "A apărut o eroare la ștergerea anunțului.";
             }
-    
+
             return RedirectToAction("Buy");
         }
 
@@ -527,7 +426,7 @@ namespace TWeb.Controllers
                 var allCars = await _carService.GetAllCarsAsync();
                 return View(allCars);
             }
-            catch (Exception)
+            catch
             {
                 TempData["ErrorMessage"] = "A apărut o eroare la încărcarea anunțurilor.";
                 return RedirectToAction("Index", "Home");

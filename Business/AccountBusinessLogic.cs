@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using TWeb.Business.Interfaces;
 using TWeb.Models;
@@ -34,20 +33,21 @@ namespace TWeb.Business
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded) return result;
-
-            _logger.LogInformation("User created a new account with password.");
-
-            await _userManager.AddToRoleAsync(user, "User");
-
-            var claims = new List<Claim>
+            if (result.Succeeded)
             {
-                new Claim("FirstName", user.FirstName ?? ""),
-                new Claim("LastName", user.LastName ?? "")
-            };
+                await _userManager.AddToRoleAsync(user, "User");
 
-            await _userManager.AddClaimsAsync(user, claims);
-            await _signInManager.SignInAsync(user, isPersistent: false);
+                var claims = new List<Claim>
+                {
+                    new Claim("FirstName", user.FirstName ?? ""),
+                    new Claim("LastName", user.LastName ?? "")
+                };
+
+                await _userManager.AddClaimsAsync(user, claims);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+
+                _logger.LogInformation("User created and signed in.");
+            }
 
             return result;
         }
@@ -55,19 +55,25 @@ namespace TWeb.Business
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(
-                model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+                model.UserName,
+                model.Password,
+                model.RememberMe,
+                lockoutOnFailure: false);
 
-            if (!result.Succeeded) return result;
-
-            var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user != null)
+            if (result.Succeeded)
             {
-                var claims = await _userManager.GetClaimsAsync(user);
-                if (!claims.Any(c => c.Type == "FirstName"))
-                    await _userManager.AddClaimAsync(user, new Claim("FirstName", user.FirstName ?? ""));
+                var user = await _userManager.FindByNameAsync(model.UserName);
+                if (user != null)
+                {
+                    var claims = await _userManager.GetClaimsAsync(user);
+                    if (!claims.Any(c => c.Type == "FirstName"))
+                        await _userManager.AddClaimAsync(user, new Claim("FirstName", user.FirstName ?? ""));
 
-                if (!claims.Any(c => c.Type == "LastName"))
-                    await _userManager.AddClaimAsync(user, new Claim("LastName", user.LastName ?? ""));
+                    if (!claims.Any(c => c.Type == "LastName"))
+                        await _userManager.AddClaimAsync(user, new Claim("LastName", user.LastName ?? ""));
+                }
+
+                _logger.LogInformation("User logged in.");
             }
 
             return result;
@@ -76,6 +82,7 @@ namespace TWeb.Business
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
         }
     }
 }

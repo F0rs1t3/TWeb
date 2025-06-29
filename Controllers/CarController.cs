@@ -1,32 +1,22 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TWeb.Data;
-using TWeb.Models;
-using TWeb.Services.Interfaces;
+using TWeb.Business.Interfaces;
 
 namespace TWeb.Controllers
 {
     [Authorize]
     public class CarController : BaseController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ICarService _carService;
+        private readonly ICarBusinessLogic _carBusinessLogic;
 
-        public CarController(
-            ApplicationDbContext context, 
-            UserManager<ApplicationUser> userManager,
-            ICarService carService)
+        public CarController(ICarBusinessLogic carBusinessLogic)
         {
-            _context = context;
-            _userManager = userManager;
-            _carService = carService;
+            _carBusinessLogic = carBusinessLogic;
         }
 
-        // List all controllers to see what we have
         public IActionResult Index()
         {
+            // In future, this could redirect based on logic from business layer
             return RedirectToAction("Buy", "Cars");
         }
     }
