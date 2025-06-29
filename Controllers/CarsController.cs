@@ -12,15 +12,18 @@ namespace TWeb.Controllers
     public class CarsController : BaseController
     {
         private readonly ICarsBusinessLogic _carsBusinessLogic;
+        private readonly ICarBusinessLogic _carBusinessLogic;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICarService _carService;
 
         public CarsController(
             ICarsBusinessLogic carsBusinessLogic,
+            ICarBusinessLogic carBusinessLogic,
             UserManager<ApplicationUser> userManager,
             ICarService carService)
         {
             _carsBusinessLogic = carsBusinessLogic;
+            _carBusinessLogic = carBusinessLogic;
             _userManager = userManager;
             _carService = carService;
         }
@@ -245,19 +248,16 @@ namespace TWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmRental(int id)
         {
-            var rental = await _carsBusinessLogic.GetRentalWithCarAsync(id);
             var currentUser = await _userManager.GetUserAsync(User);
+            var success = await _carsBusinessLogic.ConfirmRentalAsync(id, currentUser!.Id);
 
-            if (rental == null || rental.Car.OwnerId != currentUser!.Id)
-                return NotFound();
-
-            if (rental.Status == RentalStatus.Pending)
+            if (success)
             {
-                rental.Status = RentalStatus.Confirmed;
-                rental.ConfirmedAt = DateTime.UtcNow;
-                await _carsBusinessLogic.SaveChangesAsync();
-
                 TempData["Success"] = "Rental request confirmed successfully!";
+            }
+            else
+            {
+                TempData["Error"] = "Unable to confirm rental request.";
             }
 
             return RedirectToAction(nameof(RentalRequests));
@@ -402,8 +402,7 @@ namespace TWeb.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                var isAdmin = await _userManager.IsInRoleAsync(user!, "Admin");
-                var success = await _carService.DeleteCarAsync(id, user!.Id, isAdmin);
+                var success = await _carBusinessLogic.DeleteCarByAdminAsync(id, user!.Id);
 
                 TempData[success ? "SuccessMessage" : "ErrorMessage"] = success ?
                     "Anunțul a fost șters cu succes." :

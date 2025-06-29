@@ -12,6 +12,7 @@ namespace TWeb.Business.Interfaces
         Task<CarDto> CreateCarAsync(CreateCarViewModel model, string ownerId);
         Task<CarDto> UpdateCarAsync(int carId, CreateCarViewModel model, string ownerId);
         Task<bool> DeleteCarAsync(int carId, string ownerId);
+        Task<bool> DeleteCarByAdminAsync(int carId, string adminId);
         Task<IEnumerable<string>> GetBrandsAsync();
         Task<IEnumerable<string>> GetRentalBrandsAsync();
         Task<bool> IsOwnerAsync(int carId, string userId);

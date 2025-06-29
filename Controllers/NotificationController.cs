@@ -2,23 +2,24 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TWeb.Models;
-using TWeb.Services.Interfaces;
+using TWeb.Business.Interfaces;
+using TWeb.DTOs;
 
 namespace TWeb.Controllers
 {
     [Authorize]
     public class NotificationController : BaseController
     {
-        private readonly INotificationService _notificationService;
+        private readonly INotificationBusinessLogic _notificationBusinessLogic;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<NotificationController> _logger;
 
         public NotificationController(
-            INotificationService notificationService,
+            INotificationBusinessLogic notificationBusinessLogic,
             UserManager<ApplicationUser> userManager,
             ILogger<NotificationController> logger)
         {
-            _notificationService = notificationService;
+            _notificationBusinessLogic = notificationBusinessLogic;
             _userManager = userManager;
             _logger = logger;
         }
@@ -29,14 +30,14 @@ namespace TWeb.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                var notifications = await _notificationService.GetUserNotificationsAsync(user!.Id, 50);
+                var notifications = await _notificationBusinessLogic.GetUserNotificationsAsync(user!.Id, 50);
                 return View(notifications);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error loading notifications");
                 TempData["Error"] = "An error occurred while loading notifications.";
-                return View(new List<Notification>());
+                return View(new List<NotificationDto>());
             }
         }
 
@@ -46,10 +47,11 @@ namespace TWeb.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                var notifications = await _notificationService.GetUserNotificationsAsync(user!.Id, 10);
-                var unreadCount = await _notificationService.GetUnreadNotificationCountAsync(user.Id);
-                
-                return Json(new { 
+                var notifications = await _notificationBusinessLogic.GetUserNotificationsAsync(user!.Id, 10);
+                var unreadCount = await _notificationBusinessLogic.GetUnreadNotificationCountAsync(user.Id);
+
+                return Json(new
+                {
                     notifications = notifications.Select(n => new {
                         id = n.Id,
                         title = n.Title,
@@ -77,9 +79,9 @@ namespace TWeb.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                var success = await _notificationService.MarkNotificationAsReadAsync(id, user!.Id);
-                
-                return Json(new { success });
+                await _notificationBusinessLogic.MarkNotificationAsReadAsync(id, user!.Id);
+
+                return Json(new { success = true });
             }
             catch (Exception ex)
             {
@@ -96,8 +98,8 @@ namespace TWeb.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                var success = await _notificationService.MarkAllNotificationsAsReadAsync(user!.Id);
-                
+                var success = await _notificationBusinessLogic.MarkAllNotificationsAsReadAsync(user!.Id);
+
                 return Json(new { success });
             }
             catch (Exception ex)
@@ -115,8 +117,8 @@ namespace TWeb.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                var success = await _notificationService.DeleteNotificationAsync(id, user!.Id);
-                
+                var success = await _notificationBusinessLogic.DeleteNotificationAsync(id, user!.Id);
+
                 if (success)
                 {
                     TempData["Success"] = "Notification deleted successfully.";
@@ -125,7 +127,7 @@ namespace TWeb.Controllers
                 {
                     TempData["Error"] = "Failed to delete notification.";
                 }
-                
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -142,7 +144,7 @@ namespace TWeb.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                var count = await _notificationService.GetUnreadNotificationCountAsync(user!.Id);
+                var count = await _notificationBusinessLogic.GetUnreadNotificationCountAsync(user!.Id);
                 return Json(new { count });
             }
             catch (Exception ex)

@@ -19,7 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
@@ -28,7 +28,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 6;
     options.Password.RequiredUniqueChars = 1;
-    
+
     // Configure to use Username instead of Email for login
     options.User.RequireUniqueEmail = true;
     options.SignIn.RequireConfirmedEmail = false;
@@ -46,6 +46,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 // Register Repositories
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<ICarRentalRepository, CarRentalRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 // Register Business Logic
 builder.Services.AddScoped<ICarBusinessLogic, CarBusinessLogic>();
@@ -54,7 +55,6 @@ builder.Services.AddScoped<ICarRentalBusinessLogic, CarRentalBusinessLogic>();
 // Register Services
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<ICarRentalService, CarRentalService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 

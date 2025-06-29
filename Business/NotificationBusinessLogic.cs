@@ -56,30 +56,30 @@ namespace TWeb.Business
         public async Task CreateRentalReminderNotificationsAsync()
         {
             var upcomingRentals = await _notificationRepository.GetUpcomingRentalsAsync();
-            
+
             foreach (var rental in upcomingRentals)
             {
                 // Remind renter 24 hours before rental starts
                 if (rental.StartDate.Date == DateTime.Today.AddDays(1))
                 {
-                    await CreateRentalReminderNotificationAsync(rental.Id, rental.RenterId, 
-                        "Rental Starting Tomorrow", 
+                    await CreateRentalReminderNotificationAsync(rental.Id, rental.RenterId,
+                        "Rental Starting Tomorrow",
                         $"Your rental of {rental.Car.Brand} {rental.Car.Model} starts tomorrow.");
                 }
 
                 // Remind owner 24 hours before rental starts
                 if (rental.StartDate.Date == DateTime.Today.AddDays(1))
                 {
-                    await CreateRentalReminderNotificationAsync(rental.Id, rental.Car.OwnerId, 
-                        "Car Rental Starting Tomorrow", 
+                    await CreateRentalReminderNotificationAsync(rental.Id, rental.Car.OwnerId,
+                        "Car Rental Starting Tomorrow",
                         $"Your {rental.Car.Brand} {rental.Car.Model} rental starts tomorrow.");
                 }
 
                 // Remind renter 1 hour before rental ends
                 if (rental.EndDate.Date == DateTime.Today && rental.EndDate.Hour == DateTime.Now.Hour + 1)
                 {
-                    await CreateRentalReminderNotificationAsync(rental.Id, rental.RenterId, 
-                        "Rental Ending Soon", 
+                    await CreateRentalReminderNotificationAsync(rental.Id, rental.RenterId,
+                        "Rental Ending Soon",
                         $"Your rental of {rental.Car.Brand} {rental.Car.Model} ends in 1 hour. Please return the car on time.");
                 }
             }
@@ -88,7 +88,7 @@ namespace TWeb.Business
         public async Task CreateMaintenanceReminderNotificationsAsync()
         {
             var carsNeedingMaintenance = await _carRepository.GetCarsNeedingMaintenanceAsync();
-            
+
             foreach (var car in carsNeedingMaintenance)
             {
                 var notification = new NotificationDto
@@ -106,14 +106,61 @@ namespace TWeb.Business
             }
         }
 
+        public async Task CreateNewCarListedNotificationAsync(int carId, string ownerId)
+        {
+            var notification = new NotificationDto
+            {
+                UserId = ownerId,
+                Type = NotificationType.General,
+                Title = "Car Successfully Listed",
+                Message = "Your car has been successfully listed and is now visible to potential renters and buyers.",
+                RelatedEntityId = carId,
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+
+            await _notificationRepository.CreateNotificationAsync(notification);
+        }
+
+        public async Task CreateCarDeletedNotificationAsync(int carId, string ownerId, string reason)
+        {
+            var notification = new NotificationDto
+            {
+                UserId = ownerId,
+                Type = NotificationType.SystemNotification,
+                Title = "Car Listing Removed",
+                Message = $"Your car listing has been removed. Reason: {reason}",
+                RelatedEntityId = carId,
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+
+            await _notificationRepository.CreateNotificationAsync(notification);
+        }
+
         public async Task<IEnumerable<NotificationDto>> GetUserNotificationsAsync(string userId, bool unreadOnly = false)
         {
             return await _notificationRepository.GetUserNotificationsAsync(userId, unreadOnly);
         }
 
+        public async Task<IEnumerable<NotificationDto>> GetUserNotificationsAsync(string userId, int pageSize)
+        {
+            return await _notificationRepository.GetUserNotificationsAsync(userId, pageSize);
+        }
+
         public async Task MarkNotificationAsReadAsync(int notificationId, string userId)
         {
             await _notificationRepository.MarkAsReadAsync(notificationId, userId);
+        }
+
+        public async Task<bool> MarkAllNotificationsAsReadAsync(string userId)
+        {
+            return await _notificationRepository.MarkAllAsReadAsync(userId);
+        }
+
+        public async Task<bool> DeleteNotificationAsync(int notificationId, string userId)
+        {
+            return await _notificationRepository.DeleteAsync(notificationId, userId);
         }
 
         public async Task<int> GetUnreadNotificationCountAsync(string userId)

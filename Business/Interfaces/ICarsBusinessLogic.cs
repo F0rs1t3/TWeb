@@ -12,6 +12,7 @@ namespace TWeb.Business.Interfaces
         Task<List<CarRental>> GetMyRentalsAsync(string userId);
         Task<List<CarRental>> GetRentalRequestsForOwnerAsync(string ownerId);
         Task<CarRental?> GetRentalWithCarAsync(int rentalId);
+        Task<bool> ConfirmRentalAsync(int rentalId, string ownerId);
         Task SaveChangesAsync();
     }
 }

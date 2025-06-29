@@ -1,4 +1,4 @@
-@model List<TWeb.Models.Notification>
+@model List<TWeb.DTOs.NotificationDto>
 
 @{
     ViewData["Title"] = "Notifications";
@@ -78,12 +78,12 @@
             try {
                 const formData = new FormData();
                 formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
-                
+
                 const response = await fetch(`/Notification/MarkAsRead/${notificationId}`, {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const result = await response.json();
                 if (result.success) {
                     location.reload();
@@ -92,17 +92,17 @@
                 console.error('Error marking notification as read:', error);
             }
         }
-        
+
         async function markAllAsRead() {
             try {
                 const formData = new FormData();
                 formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
-                
+
                 const response = await fetch('/Notification/MarkAllAsRead', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const result = await response.json();
                 if (result.success) {
                     location.reload();
@@ -115,15 +115,15 @@
 }
 
 @functions {
-    string GetNotificationIcon(NotificationType type)
+    string GetNotificationIcon(TWeb.Models.NotificationType type)
     {
         return type switch
         {
-            NotificationType.NewMessage => "fa-comment",
-            NotificationType.NewChatRequest => "fa-comments",
-            NotificationType.RentalRequest => "fa-calendar-alt",
-            NotificationType.RentalConfirmed => "fa-check-circle",
-            NotificationType.RentalCancelled => "fa-times-circle",
+            TWeb.Models.NotificationType.NewMessage => "fa-comment",
+            TWeb.Models.NotificationType.NewChatRequest => "fa-comments",
+            TWeb.Models.NotificationType.RentalRequest => "fa-calendar-alt",
+            TWeb.Models.NotificationType.RentalConfirmed => "fa-check-circle",
+            TWeb.Models.NotificationType.RentalCancelled => "fa-times-circle",
             _ => "fa-bell"
         };
     }

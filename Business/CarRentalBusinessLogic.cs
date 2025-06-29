@@ -10,11 +10,16 @@ namespace TWeb.Business
     {
         private readonly ICarRentalRepository _rentalRepository;
         private readonly ICarRepository _carRepository;
+        private readonly INotificationBusinessLogic _notificationBusinessLogic;
 
-        public CarRentalBusinessLogic(ICarRentalRepository rentalRepository, ICarRepository carRepository)
+        public CarRentalBusinessLogic(
+            ICarRentalRepository rentalRepository,
+            ICarRepository carRepository,
+            INotificationBusinessLogic notificationBusinessLogic)
         {
             _rentalRepository = rentalRepository;
             _carRepository = carRepository;
+            _notificationBusinessLogic = notificationBusinessLogic;
         }
 
         public async Task<CarRentalViewModel?> GetRentalViewModelAsync(int carId)
@@ -64,7 +69,10 @@ namespace TWeb.Business
 
             var createdRental = await _rentalRepository.CreateRentalAsync(rental);
             var rentalWithDetails = await _rentalRepository.GetRentalByIdAsync(createdRental.Id);
-            
+
+            // Send notification to car owner about new rental request
+            await _notificationBusinessLogic.CreateRentalRequestNotificationAsync(createdRental.Id, car.OwnerId);
+
             return MapToDto(rentalWithDetails!);
         }
 
@@ -91,7 +99,10 @@ namespace TWeb.Business
             rental.Status = RentalStatus.Confirmed;
             rental.ConfirmedAt = DateTime.UtcNow;
             await _rentalRepository.UpdateRentalAsync(rental);
-            
+
+            // Send notification to renter about rental confirmation
+            await _notificationBusinessLogic.CreateRentalConfirmationNotificationAsync(rentalId, rental.RenterId);
+
             return true;
         }
 

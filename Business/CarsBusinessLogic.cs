@@ -9,10 +9,12 @@ namespace TWeb.Business
     public class CarsBusinessLogic : ICarsBusinessLogic
     {
         private readonly ApplicationDbContext _context;
+        private readonly INotificationBusinessLogic _notificationBusinessLogic;
 
-        public CarsBusinessLogic(ApplicationDbContext context)
+        public CarsBusinessLogic(ApplicationDbContext context, INotificationBusinessLogic notificationBusinessLogic)
         {
             _context = context;
+            _notificationBusinessLogic = notificationBusinessLogic;
         }
 
         public async Task<Car?> GetCarForRentalAsync(int carId)
@@ -41,6 +43,14 @@ namespace TWeb.Business
         {
             _context.CarRentals.Add(rental);
             await _context.SaveChangesAsync();
+
+            // Get the car information for the notification
+            var car = await _context.Cars.FindAsync(rental.CarId);
+            if (car != null)
+            {
+                // Send notification to car owner about new rental request
+                await _notificationBusinessLogic.CreateRentalRequestNotificationAsync(rental.Id, car.OwnerId);
+            }
         }
 
         public async Task<List<CarRental>> GetMyRentalsAsync(string userId)
@@ -68,6 +78,27 @@ namespace TWeb.Business
             return await _context.CarRentals
                 .Include(r => r.Car)
                 .FirstOrDefaultAsync(r => r.Id == rentalId);
+        }
+
+        public async Task<bool> ConfirmRentalAsync(int rentalId, string ownerId)
+        {
+            var rental = await _context.CarRentals
+                .Include(r => r.Car)
+                .FirstOrDefaultAsync(r => r.Id == rentalId);
+
+            if (rental == null || rental.Car.OwnerId != ownerId || rental.Status != RentalStatus.Pending)
+            {
+                return false;
+            }
+
+            rental.Status = RentalStatus.Confirmed;
+            rental.ConfirmedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            // Send notification to renter about rental confirmation
+            await _notificationBusinessLogic.CreateRentalConfirmationNotificationAsync(rentalId, rental.RenterId);
+
+            return true;
         }
 
         public async Task SaveChangesAsync()

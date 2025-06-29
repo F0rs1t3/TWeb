@@ -12,15 +12,18 @@ namespace TWeb.Business
     {
         private readonly ICarRepository _carRepository;
         private readonly ICarRentalRepository _rentalRepository;
+        private readonly INotificationBusinessLogic _notificationBusinessLogic;
         private readonly ILogger<CarBusinessLogic> _logger;
 
         public CarBusinessLogic(
-            ICarRepository carRepository, 
+            ICarRepository carRepository,
             ICarRentalRepository rentalRepository,
+            INotificationBusinessLogic notificationBusinessLogic,
             ILogger<CarBusinessLogic> logger)
         {
             _carRepository = carRepository;
             _rentalRepository = rentalRepository;
+            _notificationBusinessLogic = notificationBusinessLogic;
             _logger = logger;
         }
 
@@ -71,6 +74,10 @@ namespace TWeb.Business
             };
 
             var createdCar = await _carRepository.CreateCarAsync(car);
+
+            // Send notification to owner about successful car listing
+            await _notificationBusinessLogic.CreateNewCarListedNotificationAsync(createdCar.Id, ownerId);
+
             return MapToDto(createdCar);
         }
 
@@ -119,7 +126,34 @@ namespace TWeb.Business
                 throw new InvalidOperationException("Cannot delete car with active rental bookings");
             }
 
-            return await _carRepository.DeleteCarAsync(carId);
+            var success = await _carRepository.DeleteCarAsync(carId);
+
+            if (success)
+            {
+                // Send notification to owner about car deletion
+                await _notificationBusinessLogic.CreateCarDeletedNotificationAsync(carId, ownerId, "Owner deleted the listing");
+            }
+
+            return success;
+        }
+
+        public async Task<bool> DeleteCarByAdminAsync(int carId, string adminId)
+        {
+            var car = await _carRepository.GetCarByIdAsync(carId);
+            if (car == null)
+            {
+                return false;
+            }
+
+            var success = await _carRepository.DeleteCarAsync(carId);
+
+            if (success)
+            {
+                // Send notification to owner about admin deletion
+                await _notificationBusinessLogic.CreateCarDeletedNotificationAsync(carId, car.OwnerId, "Admin removed the listing");
+            }
+
+            return success;
         }
 
         public async Task<IEnumerable<string>> GetBrandsAsync()
@@ -156,7 +190,7 @@ namespace TWeb.Business
                     throw new ArgumentException("Daily rental price is required when car is available for rental");
                 }
 
-                if (model.MinRentalDays.HasValue && model.MaxRentalDays.HasValue && 
+                if (model.MinRentalDays.HasValue && model.MaxRentalDays.HasValue &&
                     model.MinRentalDays > model.MaxRentalDays)
                 {
                     throw new ArgumentException("Maximum rental days must be greater than or equal to minimum rental days");
