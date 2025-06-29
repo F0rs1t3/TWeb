@@ -57,6 +57,8 @@ builder.Services.AddScoped<ICarRentalService, CarRentalService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+builder.Services.AddScoped<IAccountBusinessLogic, AccountBusinessLogic>();
+
 
 builder.Services.AddControllersWithViews();
 
