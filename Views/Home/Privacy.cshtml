@@ -1,6 +1,31 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
-
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="privacy-policy-card card shadow-lg p-4 my-5 mx-auto" style="max-width: 800px;">
+    <div class="card-body">
+        <h1 class="card-title text-center mb-4"><i class="fas fa-user-shield me-2 text-primary"></i>@ViewData["Title"]</h1>
+        <p class="lead text-center mb-4">Your privacy is important to us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website. Please read this policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.</p>
+        <hr>
+        <h3 class="mt-4"><i class="fas fa-database me-2 text-info"></i>Information We Collect</h3>
+        <ul class="mb-4">
+            <li><strong>Personal Data:</strong> We may collect personally identifiable information, such as your name, email address, and other information you voluntarily provide to us when registering or using our services.</li>
+            <li><strong>Usage Data:</strong> We may collect information automatically when you use the site, such as your IP address, browser type, access times, and pages viewed.</li>
+        </ul>
+        <h3><i class="fas fa-cogs me-2 text-success"></i>How We Use Your Information</h3>
+        <ul class="mb-4">
+            <li>To provide, operate, and maintain our website and services</li>
+            <li>To improve, personalize, and expand our website</li>
+            <li>To understand and analyze how you use our website</li>
+            <li>To communicate with you, including for customer service and updates</li>
+            <li>To process your transactions and manage your account</li>
+        </ul>
+        <h3><i class="fas fa-share-alt me-2 text-warning"></i>Sharing Your Information</h3>
+        <p class="mb-4">We do not sell, trade, or rent your personal information to others. We may share information with service providers who assist us in operating our website, conducting our business, or serving our users, so long as those parties agree to keep this information confidential.</p>
+        <h3><i class="fas fa-lock me-2 text-danger"></i>Security of Your Information</h3>
+        <p class="mb-4">We use administrative, technical, and physical security measures to help protect your personal information. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.</p>
+        <h3><i class="fas fa-sync-alt me-2 text-secondary"></i>Changes to This Privacy Policy</h3>
+        <p class="mb-4">We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this page periodically for any changes.</p>
+        <h3><i class="fas fa-envelope me-2 text-primary"></i>Contact Us</h3>
+        <p>If you have any questions about this Privacy Policy, please contact us using the information provided on our website.</p>
+    </div>
+</div>
