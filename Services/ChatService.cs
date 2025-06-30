@@ -37,12 +37,22 @@ namespace TWeb.Services
                     CarTitle = $"{chat.Car.Brand} {chat.Car.Model} ({chat.Car.Year})",
                     CarPhotoPath = chat.Car.PhotoPath,
                     OtherUserId = chat.InitiatorId == userId ? chat.ParticipantId : chat.InitiatorId,
-                    OtherUserName = chat.InitiatorId == userId 
+                    OtherUserName = chat.InitiatorId == userId
                         ? $"{chat.Participant.FirstName} {chat.Participant.LastName}".Trim()
                         : $"{chat.Initiator.FirstName} {chat.Initiator.LastName}".Trim(),
                     IsOwner = chat.Car.OwnerId == userId,
                     UnreadCount = chat.Messages.Count(m => !m.IsRead && m.SenderId != userId),
-                    LastMessageAt = chat.LastMessageAt
+                    LastMessageAt = chat.LastMessageAt,
+                    Messages = chat.Messages.Select(m => new ChatMessageViewModel
+                    {
+                        Id = m.Id,
+                        SenderId = m.SenderId,
+                        SenderName = $"{m.Sender.FirstName} {m.Sender.LastName}".Trim(),
+                        Message = m.Message,
+                        SentAt = m.SentAt,
+                        IsRead = m.IsRead,
+                        IsCurrentUser = m.SenderId == userId
+                    }).ToList()
                 });
             }
             catch (Exception ex)
@@ -67,7 +77,7 @@ namespace TWeb.Services
                     .Include(c => c.Participant)
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.Sender)
-                    .FirstOrDefaultAsync(c => c.Id == chatId && 
+                    .FirstOrDefaultAsync(c => c.Id == chatId &&
                                            (c.InitiatorId == userId || c.ParticipantId == userId));
 
                 if (chat == null)
@@ -88,7 +98,7 @@ namespace TWeb.Services
                     CarTitle = $"{chat.Car.Brand} {chat.Car.Model} ({chat.Car.Year})",
                     CarPhotoPath = chat.Car.PhotoPath,
                     OtherUserId = chat.InitiatorId == userId ? chat.ParticipantId : chat.InitiatorId,
-                    OtherUserName = chat.InitiatorId == userId 
+                    OtherUserName = chat.InitiatorId == userId
                         ? $"{chat.Participant.FirstName} {chat.Participant.LastName}".Trim()
                         : $"{chat.Initiator.FirstName} {chat.Initiator.LastName}".Trim(),
                     IsOwner = chat.Car.OwnerId == userId,
@@ -210,7 +220,7 @@ namespace TWeb.Services
             try
             {
                 var chat = await _context.Chats
-                    .FirstOrDefaultAsync(c => c.Id == chatId && 
+                    .FirstOrDefaultAsync(c => c.Id == chatId &&
                                            (c.InitiatorId == userId || c.ParticipantId == userId));
 
                 if (chat == null)
@@ -241,7 +251,7 @@ namespace TWeb.Services
             try
             {
                 return await _context.Chats
-                    .AnyAsync(c => c.Id == chatId && 
+                    .AnyAsync(c => c.Id == chatId &&
                                   (c.InitiatorId == userId || c.ParticipantId == userId));
             }
             catch (Exception ex)
@@ -257,7 +267,7 @@ namespace TWeb.Services
             {
                 return await _context.ChatMessages
                     .Include(m => m.Chat)
-                    .Where(m => !m.IsRead && 
+                    .Where(m => !m.IsRead &&
                                m.SenderId != userId &&
                                (m.Chat.InitiatorId == userId || m.Chat.ParticipantId == userId))
                     .CountAsync();
@@ -275,8 +285,8 @@ namespace TWeb.Services
             {
                 var messages = await _context.ChatMessages
                     .Include(m => m.Chat)
-                    .Where(m => m.ChatId == chatId && 
-                               !m.IsRead && 
+                    .Where(m => m.ChatId == chatId &&
+                               !m.IsRead &&
                                m.SenderId != userId &&
                                (m.Chat.InitiatorId == userId || m.Chat.ParticipantId == userId))
                     .ToListAsync();

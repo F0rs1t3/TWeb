@@ -26,7 +26,7 @@
                     }
 
                     <h1 class="h2 mb-3">@Model.Brand @Model.Model (@Model.Year)</h1>
-                    
+
                     <!-- Car Details -->
                     <div class="row mb-4">
                         <div class="col-md-6">
@@ -42,9 +42,9 @@
                             <h5>Owner Information</h5>
                             <ul class="list-unstyled">
                                 <li>
-                                    <strong>Owner:</strong> 
+                                    <strong>Owner:</strong>
                                     @Model.Owner?.FirstName @Model.Owner?.LastName
-                                    @if (User.Identity.IsAuthenticated && User.Identity.Name != Model.Owner?.UserName)
+                                    @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name != Model.Owner?.UserName)
                                     {
                                         <button class="btn btn-sm btn-outline-primary ms-2" onclick="showChatModal('general')">
                                             <i class="fas fa-comment"></i> Chat
@@ -98,7 +98,7 @@
                             </div>
                         }
 
-                        @if (User.Identity.IsAuthenticated && User.Identity.Name != Model.Owner?.UserName)
+                        @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name != Model.Owner?.UserName)
                         {
                             <div class="d-grid gap-2">
                                 <button class="btn btn-success" onclick="showChatModal('buy')">
@@ -161,7 +161,7 @@
                             </div>
                         }
 
-                        @if (User.Identity.IsAuthenticated && User.Identity.Name != Model.Owner?.UserName)
+                        @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name != Model.Owner?.UserName)
                         {
                             <div class="d-grid gap-2">
                                 <a asp-action="RentCar" asp-route-id="@Model.Id" class="btn btn-primary">
@@ -177,7 +177,7 @@
             }
 
             <!-- Owner Actions -->
-            @if (User.Identity.IsAuthenticated && User.Identity.Name == Model.Owner?.UserName)
+            @if (User?.Identity?.IsAuthenticated == true && User?.Identity?.Name == Model.Owner?.UserName)
             {
                 <div class="card">
                     <div class="card-header">
@@ -211,16 +211,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form asp-controller="Chat" asp-action="Start" method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <input type="hidden" name="CarId" value="@Model.Id" />
-                    <input type="hidden" name="ChatType" id="chatType" value="" />
-                    
+                    <input type="hidden" name="ChatType" id="chatType" value="0" />
+
                     <div class="mb-3">
                         <label for="initialMessage" class="form-label">Your Message</label>
-                        <textarea name="InitialMessage" id="initialMessage" class="form-control" rows="4" 
+                        <textarea name="InitialMessage" id="initialMessage" class="form-control" rows="4"
                                   placeholder="Hi! I'm interested in your car..." required></textarea>
                     </div>
-                    
+
                     <div class="alert alert-info">
                         <small>
                             <i class="fas fa-info-circle"></i>
@@ -261,11 +262,24 @@
 @section Scripts {
     <script>
         function showChatModal(type) {
-            document.getElementById('chatType').value = type;
-            
+            let chatTypeValue = 0; // General
+
+            switch(type) {
+                case 'buy':
+                    chatTypeValue = 1; // Purchase
+                    break;
+                case 'rent':
+                    chatTypeValue = 2; // Rental
+                    break;
+                default:
+                    chatTypeValue = 0; // General
+            }
+
+            document.getElementById('chatType').value = chatTypeValue;
+
             const modalTitle = document.getElementById('chatModalLabel');
             const messageTextarea = document.getElementById('initialMessage');
-            
+
             switch(type) {
                 case 'buy':
                     modalTitle.textContent = 'Interested in Buying';
@@ -279,26 +293,26 @@
                     modalTitle.textContent = 'Start Chat';
                     messageTextarea.placeholder = 'Hi! I have some questions about your @Model.Brand @Model.Model...';
             }
-            
+
             const modal = new bootstrap.Modal(document.getElementById('chatModal'));
             modal.show();
         }
 
         function contactOwner(type) {
-            @if (Model.Owner?.Email != null)
-            {
-                <text>
-                const subject = encodeURIComponent('Interested in your @Model.Brand @Model.Model (@Model.Year)');
-                const body = encodeURIComponent('Hi,\n\nI saw your car listing and I\'m interested. Could we discuss the details?\n\nThanks!');
-                window.location.href = `mailto:@Model.Owner.Email?subject=${subject}&body=${body}`;
-                </text>
-            }
-            else
-            {
-                <text>
-                alert('Owner contact information not available. Please use the chat feature to contact the owner.');
-                </text>
-            }
+        @if (Model.Owner?.Email != null)
+        {
+            <text>
+                    const subject = encodeURIComponent('Interested in your @Model.Brand @Model.Model (@Model.Year)');
+                    const body = encodeURIComponent('Hi,\n\nI saw your car listing and I\'m interested. Could we discuss the details?\n\nThanks!');
+                    window.location.href = `mailto:@Model.Owner.Email?subject=${subject}&body=${body}`;
+            </text>
+        }
+        else
+        {
+            <text>
+                    alert('Owner contact information not available. Please use the chat feature to contact the owner.');
+            </text>
+        }
         }
     </script>
 }

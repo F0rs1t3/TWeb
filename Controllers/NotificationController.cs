@@ -31,7 +31,7 @@ namespace TWeb.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 var notifications = await _notificationBusinessLogic.GetUserNotificationsAsync(user!.Id, 50);
-                return View(notifications);
+                return View(notifications.ToList());
             }
             catch (Exception ex)
             {

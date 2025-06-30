@@ -15,7 +15,7 @@ namespace TWeb.Business
             _rentalRepository = rentalRepository;
         }
 
-        public async Task<SmartPricingDto> CalculateSmartPricingAsync(int carId, DateTime startDate, DateTime endDate)
+        public async Task<SmartPricingDto?> CalculateSmartPricingAsync(int carId, DateTime startDate, DateTime endDate)
         {
             var car = await _carRepository.GetCarByIdAsync(carId);
             if (car?.DailyRentalPrice == null) return null;
@@ -56,11 +56,11 @@ namespace TWeb.Business
             // Check how many cars are booked during this period
             var totalCars = await _carRepository.GetAvailableRentalCarsCountAsync();
             var bookedCars = await _rentalRepository.GetBookedCarsCountAsync(startDate, endDate);
-            
+
             if (totalCars == 0) return 1.0m;
-            
+
             var occupancyRate = (decimal)bookedCars / totalCars;
-            
+
             return occupancyRate switch
             {
                 > 0.8m => 1.3m, // High demand
@@ -87,9 +87,9 @@ namespace TWeb.Business
             // Summer months (June-August) have higher demand
             var summerMonths = new[] { 6, 7, 8 };
             var holidayMonths = new[] { 12, 1 }; // December, January
-            
+
             var avgMonth = (startDate.Month + endDate.Month) / 2.0;
-            
+
             if (summerMonths.Contains((int)avgMonth))
                 return 1.2m;
             else if (holidayMonths.Contains((int)avgMonth))

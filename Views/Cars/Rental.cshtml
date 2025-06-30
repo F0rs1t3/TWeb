@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>@ViewData["Title"]</h2>
-        @if (User.Identity.IsAuthenticated)
+        @if (User?.Identity?.IsAuthenticated == true)
         {
             <a asp-action="Create" class="btn btn-primary">
                 <i class="fas fa-plus"></i> List Your Car
@@ -27,9 +27,12 @@
                         <label for="brand" class="form-label">Brand</label>
                         <select class="form-control" id="brand" name="brand">
                             <option value="">All Brands</option>
-                            @foreach (var brand in ViewBag.Brands as IEnumerable<string>)
+                            @if (ViewBag.Brands is IEnumerable<string> brands)
                             {
-                                <option value="@brand" selected="@(ViewBag.Brand == brand)">@brand</option>
+                                @foreach (var brand in brands)
+                                {
+                                    <option value="@brand" selected="@(ViewBag.Brand == brand)">@brand</option>
+                                }
                             }
                         </select>
                     </div>
@@ -111,7 +114,7 @@
                                 </div>
                                 <div class="btn-group">
                                     <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-outline-primary btn-sm">Details</a>
-                                    @if (User.Identity.IsAuthenticated)
+                                    @if (User?.Identity?.IsAuthenticated == true)
                                     {
                                         <a asp-action="RentCar" asp-route-id="@car.Id" class="btn btn-success btn-sm">Rent</a>
                                     }
@@ -135,7 +138,7 @@
             <i class="fas fa-car fa-5x text-muted mb-3"></i>
             <h4>No cars available for rental</h4>
             <p class="text-muted">Try adjusting your search criteria or check back later.</p>
-            @if (User.Identity.IsAuthenticated)
+            @if (User?.Identity?.IsAuthenticated == true)
             {
                 <a asp-action="Create" class="btn btn-success">List Your Car for Rental</a>
             }
